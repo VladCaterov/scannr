@@ -1,7 +1,8 @@
-package com.example.scannr;
+package com.example.scannr.dashboard;
 
 import android.os.Bundle;
 
+import com.example.scannr.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,5 @@ public class Dashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
     }
 }

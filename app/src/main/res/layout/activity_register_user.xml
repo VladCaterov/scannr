@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+        <TextView
+            android:id="@+id/scannr"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/scannr"
+            android:textSize="48sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/scannr_register"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/scannr_register"
+            android:textSize="48sp"
+            android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="56dp">
+
+        <EditText
+            android:id="@+id/firstNameRegister"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/first_name_input"
+            android:inputType="text"
+            android:textSize="24sp" />
+        <EditText
+            android:id="@+id/lastNameRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/last_name_input"
+            android:inputType="text"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/emailRegister"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:textSize="24sp"
+        android:layout_marginTop="56dp"/>
+    <EditText
+        android:id="@+id/passwordRegister"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textSize="24sp"
+        android:layout_marginTop="56dp"/>
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="177dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="56dp"
+        android:text="@string/register"/>
+</LinearLayout>

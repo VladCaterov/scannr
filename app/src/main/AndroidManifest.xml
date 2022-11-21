@@ -13,14 +13,31 @@
         android:theme="@style/Theme.Scannr"
         tools:targetApi="31">
         <activity
-            android:name=".Rewards"
+            android:name=".registration_login.RegisterUser"
+            android:exported="false"
+            android:label="@string/title_activity_register_user"
+            android:theme="@style/Theme.Scannr.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
+        </activity>
+        <activity
+            android:name=".registration_login.ForgotPassword"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Dashboard"
+            android:name=".rewards.Rewards"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".dashboard.Dashboard"
             android:exported="false"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.Scannr.NoActionBar">
@@ -29,7 +46,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".registration_login.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
