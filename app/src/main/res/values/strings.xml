@@ -20,4 +20,8 @@
     <string name="title_activity_register_user">RegisterUser</string>
     <string name="first_name_input">First Name</string>
     <string name="last_name_input">Last Name</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="forgot_password_modal_title">Forgot Password?</string>
+    <string name="forgot_password_description">Enter an email to send a password change email</string>
 </resources>
