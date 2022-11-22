@@ -52,11 +52,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch(v.getId()){
+
+            case R.id.buttonLogin:
+                startActivity(new Intent(MainActivity.this, Dashboard.class));
+//                userLogin();
+                break;
             case R.id.registerLogin:
                 registerUserScreen();
-                break;
-            case R.id.buttonLogin:
-                userLogin();
                 break;
             case R.id.forgotPasswordLogin:
                 forgotPassword();
@@ -108,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void registerUserScreen(){
 
-        startActivity(new Intent(this,RegisterUser.class));
+        startActivity(new Intent(MainActivity.this,RegisterUser.class));
     }
     private void forgotPassword(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
 
         // Add the buttons
