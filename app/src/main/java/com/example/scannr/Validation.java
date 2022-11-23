@@ -18,4 +18,9 @@ public class Validation {
         return password.isEmpty();
     }
 
+    public boolean isEmptyFirstName(String fName) { return fName.isEmpty(); }
+    public boolean isEmptyLastName(String lName) { return lName.isEmpty(); }
+    public boolean isEmptyPhoneNumber(String phoneNumber) { return phoneNumber.isEmpty(); }
+
+
 }

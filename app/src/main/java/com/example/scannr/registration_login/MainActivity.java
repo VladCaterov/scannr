@@ -1,16 +1,19 @@
 package com.example.scannr.registration_login;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +25,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Validation validate = new Validation();
@@ -29,6 +36,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView register, forgotPassword;
     private Button logIn;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         editEmail= findViewById(R.id.emailLogin);
         editPassword= findViewById(R.id.passwordLogin);
-
         logIn = findViewById(R.id.buttonLogin);
         logIn.setOnClickListener(this);
 
@@ -46,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         forgotPassword = findViewById(R.id.forgotPasswordLogin);
         forgotPassword.setOnClickListener(this);
 
-        mAuth= FirebaseAuth.getInstance();
     }
 
     @Override
@@ -54,8 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
 
             case R.id.buttonLogin:
-                startActivity(new Intent(MainActivity.this, Dashboard.class));
-//                userLogin();
+                userLogin();
                 break;
             case R.id.registerLogin:
                 registerUserScreen();
@@ -66,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     private void userLogin() {
+        mAuth= FirebaseAuth.getInstance();
+
         String email = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
         //path validation
@@ -74,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editEmail.requestFocus();
             return;
         }
-        if (validate.validateEmail(email)) {
+        if (!validate.validateEmail(email)) {
             editEmail.setError("Please enter a valid email!");
             editEmail.requestFocus();
             return;
@@ -113,25 +124,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(new Intent(MainActivity.this,RegisterUser.class));
     }
     private void forgotPassword(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = this.getLayoutInflater();
+        View view = getLayoutInflater().inflate(R.layout.dialog_forgot_password,null, true);
+        emailToSend = view.findViewById(R.id.emailForgotPass);
+        String email = emailToSend.getText().toString().trim();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // Add the buttons
-        builder.setView(inflater.inflate(R.layout.dialog_forgot_password, null))
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // SEND EMAIL
-                        Toast.makeText(MainActivity.this,"Check your email to reset your password!",
+        builder.setView(view)
+
+                .setPositiveButton(R.string.ok, (dialog, id) -> {
+
+                    // SEND FORGET PASSWORD EMAIL
+                    if (validate.isEmptyEmail(email)) {
+                        Toast.makeText(MainActivity.this, "Email Failed To Send:\nAn Email Is Required",
                                 Toast.LENGTH_LONG).show();
                     }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // GO BACK
-                        // NOTHING TO DO
+                    else if (!validate.validateEmail(email)) {
+                        Toast.makeText(MainActivity.this, "Email Failed To Send:\nPlease Enter a Valid Email",
+                                Toast.LENGTH_LONG).show();
                     }
-                });
+                    else{
+                        String message = "If you have an account, check your" + email + "email to reset your password!";
+                        // QUERY IF EMAIL EXISTS IN SYSTEM
+                        db.collection("users")
+                                .get()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            if (document.get("email") == email){
+                                                mAuth.sendPasswordResetEmail(emailToSend.getText().toString().trim());
+                                            }
+                                        }
+                                    } else {
+                                        Log.d(TAG, "Error getting documents: ", task.getException());
+                                    }
+                                });
+                        Toast.makeText(MainActivity.this, message,
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
 
         AlertDialog dialog = builder.create();
         dialog.show();

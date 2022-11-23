@@ -30,13 +30,14 @@
         android:orientation="horizontal"
         android:layout_gravity="center">
         <Button
+            android:id="@+id/settings_routing"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-
             android:text="@string/settings"/>
         <Button
+            android:id="@+id/family_manager_routing"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
@@ -51,6 +52,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center">
         <Button
+            android:id="@+id/purchase_history_manager_routing"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
@@ -58,6 +60,7 @@
             android:padding="10dp"
             android:text="@string/purchase_history_manager"/>
         <Button
+            android:id="@+id/receipt_uploader_routing"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
@@ -73,6 +76,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center">
         <Button
+            android:id="@+id/rewards_routing"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
@@ -80,6 +84,7 @@
             android:padding="10dp"
             android:text="@string/rewards"/>
         <Button
+            android:id="@+id/notification_routing"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"

@@ -23,13 +23,6 @@
 
         </activity>
         <activity
-            android:name=".registration_login.ForgotPassword"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".rewards.Rewards"
             android:exported="false">
             <meta-data
