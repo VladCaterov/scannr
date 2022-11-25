@@ -1,7 +1,6 @@
 package com.example.scannr.dashboard;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -23,17 +22,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.scannr.databinding.ActivityDashboardBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Dashboard extends AppCompatActivity implements View.OnClickListener {
-    private FirebaseAuth mAuth;
-    FirebaseUser user = mAuth.getCurrentUser();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Button settings, familyManager, purchaseHistoryManager,
     receiptManager, rewards, notifications, logOut;
@@ -42,6 +37,7 @@ public class Dashboard extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
         welcomeMessage();
 
         settings = findViewById(R.id.settings_routing);
@@ -95,11 +91,19 @@ public class Dashboard extends AppCompatActivity implements View.OnClickListener
                 break;
         }
     }
-    private TextView welcomeMessage(){
+    private void welcomeMessage(){
+        String greeting;
+        FirebaseUser user = mAuth.getCurrentUser();
+
         TextView welcomeMessage = findViewById(R.id.welcomeMessage);
-        String greeting = "Hello";
+        if (user != null){
+            String dName = user.getDisplayName();
+            greeting = "Hello " + dName;
+        }
+        else{
+            greeting = "Hello User";
+        }
         welcomeMessage.setText(greeting);
-        return welcomeMessage;
     }
 
     private void logout(){

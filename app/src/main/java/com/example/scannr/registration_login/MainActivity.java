@@ -3,39 +3,32 @@ package com.example.scannr.registration_login;
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.scannr.Validation;
-import com.example.scannr.dashboard.Dashboard;
 import com.example.scannr.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.scannr.dashboard.Dashboard;
+import com.example.scannr.family_manager.FamilyManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Validation validate = new Validation();
     private EditText editEmail, editPassword, emailToSend;
     private TextView register, forgotPassword;
     private Button logIn;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -65,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.buttonLogin:
                 userLogin();
+//                startActivity(new Intent(MainActivity.this, FamilyManager.class));
+
                 break;
             case R.id.registerLogin:
                 registerUserScreen();
@@ -152,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if (task.isSuccessful()) {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             if (document.get("email") == email){
-                                                mAuth.sendPasswordResetEmail(emailToSend.getText().toString().trim());
+                                                mAuth.sendPasswordResetEmail(email);
                                             }
                                         }
                                     } else {

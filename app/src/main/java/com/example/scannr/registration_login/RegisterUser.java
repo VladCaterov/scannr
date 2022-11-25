@@ -1,62 +1,35 @@
 package com.example.scannr.registration_login;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.navigation.ui.AppBarConfiguration;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.scannr.R;
 import com.example.scannr.Validation;
-import com.example.scannr.databinding.ActivityDashboardBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.firestore.DocumentReference;
+import com.example.scannr.dashboard.Dashboard;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Patterns;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.scannr.dashboard.Dashboard;
-import com.example.scannr.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener{
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     Validation validate = new Validation();
 
     private Button register;
-        private EditText editFirstName, editLastName, editEmail, editPassword,
-            editPhoneNumber, editDOB, editMiddleInitial;
+    private EditText editFirstName, editLastName, editEmail, editPassword,
+        editPhoneNumber, editDOB, editMiddleInitial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,18 +50,14 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         register = findViewById(R.id.registerButton);
         register.setOnClickListener(this);
 
-        mAuth= FirebaseAuth.getInstance();
 
     }
 
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.registerButton:
-                registerUser();
-                break;
-
+        if (v.getId() == R.id.registerButton) {
+            registerUser();
         }
     }
     private void registerUser(){
@@ -156,38 +125,26 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(RegisterUser.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
                     }
-                })
-                .addOnSuccessListener(this, task ->{
-                    FirebaseUser user1 = mAuth.getCurrentUser();
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    assert user1 != null;
-                    db.collection("users")
-                            .document(user1.getUid())
-                            .set(user);
-                    startActivity(new Intent(RegisterUser.this,Dashboard.class));
+                    else
+                    {
+                        // CREATE USER IN DATABASE FOR ADDITIONAL INFORMATION
+                        FirebaseUser user1 = mAuth.getCurrentUser();
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(fName + " " + mInitial + ". " + lName)
+                                .build();
+                        assert user1 != null;
+                        user1.updateProfile(profileUpdates);
 
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("users")
+                                .document(user1.getUid())
+                                .set(user);
+
+                        startActivity(new Intent(RegisterUser.this, MainActivity.class));
+                    }
                 });
+
     }
-//
-//    private void dateOfBirth(){
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterUser.this);
-//        LayoutInflater inflater = this.getLayoutInflater();
-//
-//        // Add the buttons
-//        builder.setView(inflater.inflate(R.layout.dialog_dob, null))
-//                .setPositiveButton(R.string.ok, (dialog, id) -> {
-////                    int month = date.getMonth();
-////                    int year = date.getYear();
-//                })
-//                .setNegativeButton(R.string.cancel, (dialog, id) -> {
-//                    // GO BACK
-//                    // NOTHING TO DO
-//                    dialog.cancel();
-//                });
-//
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
+
 
 }

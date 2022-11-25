@@ -39,6 +39,15 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".family_manager.FamilyManager"
+            android:exported="false"
+            android:label="@string/title_activity_family_manager"
+            android:theme="@style/Theme.Scannr.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".registration_login.MainActivity"
             android:exported="true">
             <intent-filter>

@@ -36,4 +36,7 @@
     <string name="phone_number">Phone Number</string>
     <string name="select_birthday">Select your date of birth</string>
     <string name="date_of_birth">Date of Birth</string>
+    <string name="todo">TODO</string>
+    <string name="title_activity_family_manager">Family Manager</string>
+    <string name="addChild">add child</string>
 </resources>
