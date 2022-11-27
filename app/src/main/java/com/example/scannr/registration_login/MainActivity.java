@@ -17,37 +17,45 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.scannr.Validation;
 import com.example.scannr.R;
 import com.example.scannr.dashboard.Dashboard;
-import com.example.scannr.family_manager.FamilyManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Validation validate = new Validation();
-    private EditText editEmail, editPassword, emailToSend;
-    private TextView register, forgotPassword;
-    private Button logIn;
+    private EditText editEmail;
+    private EditText editPassword;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // IF USER IS SIGNED IN, SIGN OUT
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            mAuth.signOut();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         editEmail= findViewById(R.id.emailLogin);
         editPassword= findViewById(R.id.passwordLogin);
-        logIn = findViewById(R.id.buttonLogin);
+
+        Button logIn = findViewById(R.id.buttonLogin);
         logIn.setOnClickListener(this);
 
-        register = findViewById(R.id.registerLogin);
+        TextView register = findViewById(R.id.registerLogin);
         register.setOnClickListener(this);
 
-        forgotPassword = findViewById(R.id.forgotPasswordLogin);
+        TextView forgotPassword = findViewById(R.id.forgotPasswordLogin);
         forgotPassword.setOnClickListener(this);
 
     }
@@ -55,15 +63,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-
             case R.id.buttonLogin:
                 userLogin();
-//                startActivity(new Intent(MainActivity.this, FamilyManager.class));
-
                 break;
+
             case R.id.registerLogin:
                 registerUserScreen();
                 break;
+
             case R.id.forgotPasswordLogin:
                 forgotPassword();
                 break;
@@ -120,42 +127,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void forgotPassword(){
         View view = getLayoutInflater().inflate(R.layout.dialog_forgot_password,null, true);
-        emailToSend = view.findViewById(R.id.emailForgotPass);
-        String email = emailToSend.getText().toString().trim();
+        EditText emailToSend = view.findViewById(R.id.emailForgotPass);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // Add the buttons
         builder.setView(view)
-
                 .setPositiveButton(R.string.ok, (dialog, id) -> {
+                    String email = emailToSend.getText().toString().trim();
 
                     // SEND FORGET PASSWORD EMAIL
                     if (validate.isEmptyEmail(email)) {
                         Toast.makeText(MainActivity.this, "Email Failed To Send:\nAn Email Is Required",
                                 Toast.LENGTH_LONG).show();
                     }
-                    else if (!validate.validateEmail(email)) {
+                    if (!validate.validateEmail(email)) {
                         Toast.makeText(MainActivity.this, "Email Failed To Send:\nPlease Enter a Valid Email",
                                 Toast.LENGTH_LONG).show();
                     }
                     else{
-                        String message = "If you have an account, check your" + email + "email to reset your password!";
+                        String message = "Check your " + email + " email to reset your password!";
                         // QUERY IF EMAIL EXISTS IN SYSTEM
+                        Query q =db.collection("users").whereEqualTo("email",email);
                         db.collection("users")
+                                .whereEqualTo("email", email)
                                 .get()
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if (document.get("email") == email){
+                                            if (Objects.equals(document.getData().get("email"), email)){
                                                 mAuth.sendPasswordResetEmail(email);
+                                                Toast.makeText(MainActivity.this, message,Toast.LENGTH_LONG).show();
+                                                return;
                                             }
+                                            Log.d(TAG, document.getId() + " => " + document.getData());
                                         }
+                                        Toast.makeText(MainActivity.this, "No email found",Toast.LENGTH_LONG).show();
                                     } else {
                                         Log.d(TAG, "Error getting documents: ", task.getException());
                                     }
                                 });
-                        Toast.makeText(MainActivity.this, message,
-                                Toast.LENGTH_LONG).show();
                     }
 
                 })

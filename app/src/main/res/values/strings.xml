@@ -39,4 +39,5 @@
     <string name="todo">TODO</string>
     <string name="title_activity_family_manager">Family Manager</string>
     <string name="addChild">add child</string>
+    <string name="scannr_family_manager">Scannr Family Manager</string>
 </resources>

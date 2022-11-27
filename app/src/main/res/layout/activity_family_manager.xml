@@ -1,50 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/family_manager_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginBottom="10dp"
-    android:layout_marginTop="100dp">
+    android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/test1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
+        android:text="Hello World"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        android:layout_marginTop="24dp">
-
-        <EditText
-            android:id="@+id/firstNameRegister"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:ems="10"
-            android:hint="@string/first_name_input"
-            android:inputType="text"
-            android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/middleInitialRegister"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:maxLength="1"
-            android:ems="10"
-            android:hint="@string/middle_initial_input"
-            android:inputType="text"
-            android:textSize="24sp" />
-        <EditText
-            android:id="@+id/lastNameRegister"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:ems="10"
-            android:hint="@string/last_name_input"
-            android:inputType="text"
-            android:textSize="24sp" />
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

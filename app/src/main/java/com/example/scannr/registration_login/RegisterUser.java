@@ -9,6 +9,7 @@ import android.view.View;
 import com.example.scannr.R;
 import com.example.scannr.Validation;
 import com.example.scannr.dashboard.Dashboard;
+import com.example.scannr.family_manager.FamilyManager;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,14 +21,15 @@ import android.widget.Button;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener{
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     Validation validate = new Validation();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private Button register;
     private EditText editFirstName, editLastName, editEmail, editPassword,
         editPhoneNumber, editDOB, editMiddleInitial;
 
@@ -47,7 +49,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         editEmail= findViewById(R.id.emailRegister);
         editPassword= findViewById(R.id.passwordRegister);
 
-        register = findViewById(R.id.registerButton);
+        Button register = findViewById(R.id.registerButton);
         register.setOnClickListener(this);
 
 
@@ -69,6 +71,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         String email = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
 
+
         Map<String, Object> user = new HashMap<>();
         user.put("fName", fName);
         user.put("mInitial", mInitial);
@@ -76,6 +79,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         user.put("dob", dob);
         user.put("email", email);
         user.put("phoneNumber", phoneNumber);
+        user.put("children", new ArrayList<>());
         user.put("numChildren", 0);
         user.put("numRewards", 0);
 
@@ -135,7 +139,6 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                         assert user1 != null;
                         user1.updateProfile(profileUpdates);
 
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
                         db.collection("users")
                                 .document(user1.getUid())
                                 .set(user);
