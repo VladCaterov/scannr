@@ -41,4 +41,7 @@
     <string name="addChild">add child</string>
     <string name="scannr_family_manager">Scannr Family Manager</string>
     <string name="backButton">Back</string>
+    <string name="NoChildAccounts">NO CHILD ACCOUNTS</string>
+    <string name="title_activity_child_account_register">Register Child Account</string>
+    <string name="scannr_register_child">Register Child</string>
 </resources>
