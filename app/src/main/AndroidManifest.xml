@@ -27,9 +27,8 @@
         </activity>
         <activity
             android:name=".registration_login.RegisterUser"
-            android:exported="false"
-            android:label="@string/title_activity_register_user"
-            android:theme="@style/Theme.Scannr.NoActionBar">
+            android:exported="true"
+            android:label="@string/title_activity_register_user">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Validation validate = new Validation();
     private EditText editEmail;
     private EditText editPassword;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -37,12 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // IF USER IS SIGNED IN, SIGN OUT
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // User is signed in
-            mAuth.signOut();
-        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -102,17 +97,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editPassword.requestFocus();
             return;
         }
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            mAuth.signOut();
+        }
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                assert user != null;
-                if (user.isEmailVerified()) {
-                    startActivity(new Intent(MainActivity.this, Dashboard.class));
-                } else {
-                    user.sendEmailVerification();
-                    Toast.makeText(MainActivity.this, "Check your email to verify your account!",
-                            Toast.LENGTH_LONG).show();
-                }
+//                TODO: VERIFICATION TO BE FIXED LATER
+//                assert user != null;
+//                if (user.isEmailVerified()) {
+//                    startActivity(new Intent(MainActivity.this, Dashboard.class));
+//                } else {
+//                    user.sendEmailVerification();
+//                    Toast.makeText(MainActivity.this, "Check your email to verify your account!",
+//                            Toast.LENGTH_LONG).show();
+                startActivity(new Intent(MainActivity.this, Dashboard.class));
             }
             else
             {
@@ -122,10 +122,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void registerUserScreen(){
-
         startActivity(new Intent(MainActivity.this,RegisterUser.class));
     }
     private void forgotPassword(){
+        mAuth= FirebaseAuth.getInstance();
+
         View view = getLayoutInflater().inflate(R.layout.dialog_forgot_password,null, true);
         EditText emailToSend = view.findViewById(R.id.emailForgotPass);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -147,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     else{
                         String message = "Check your " + email + " email to reset your password!";
                         // QUERY IF EMAIL EXISTS IN SYSTEM
-                        Query q =db.collection("users").whereEqualTo("email",email);
                         db.collection("users")
                                 .whereEqualTo("email", email)
                                 .get()
