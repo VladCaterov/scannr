@@ -61,7 +61,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.backButtonRegister:
-                startActivity(new Intent(RegisterUser.this, MainActivity.class));
+                finish();
                 break;
             case R.id.registerButton:
                 registerUser();

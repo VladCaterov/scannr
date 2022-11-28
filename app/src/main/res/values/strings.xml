@@ -44,4 +44,10 @@
     <string name="NoChildAccounts">NO CHILD ACCOUNTS</string>
     <string name="title_activity_child_account_register">Register Child Account</string>
     <string name="scannr_register_child">Register Child</string>
+    <string name="BankRoutingNumber">Bank Routing Number</string>
+    <string name="BankAccountNumber">Bank Account Number</string>
+    <string name="SpendingLimit">Spending Limit</string>
+    <string name="registerChild">REGISTER CHILD</string>
+    <string name="update">UPDATE</string>
+    <string name="delete">DELETE</string>
 </resources>

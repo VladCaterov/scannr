@@ -114,7 +114,7 @@ public class Dashboard extends AppCompatActivity implements View.OnClickListener
                 .setPositiveButton(R.string.ok, (dialog, id) -> {
                     // Sign Out
                     mAuth.signOut();
-                    startActivity(new Intent(Dashboard.this, MainActivity.class));
+                    finish();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {
                     dialog.cancel();

@@ -55,6 +55,7 @@
 
     </LinearLayout>
     <ListView
+        android:id="@+id/childrenListView"
         android:layout_width="match_parent"
         android:layout_height="513dp"
         app:layout_constraintStart_toStartOf="parent"

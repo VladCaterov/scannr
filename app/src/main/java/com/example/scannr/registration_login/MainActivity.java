@@ -104,15 +104,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-//                TODO: VERIFICATION TO BE FIXED LATER
-//                assert user != null;
-//                if (user.isEmailVerified()) {
-//                    startActivity(new Intent(MainActivity.this, Dashboard.class));
-//                } else {
-//                    user.sendEmailVerification();
-//                    Toast.makeText(MainActivity.this, "Check your email to verify your account!",
-//                            Toast.LENGTH_LONG).show();
-                startActivity(new Intent(MainActivity.this, Dashboard.class));
+                assert mAuth.getCurrentUser() != null;
+                if (mAuth.getCurrentUser().isEmailVerified()) {
+                    startActivity(new Intent(MainActivity.this, Dashboard.class));
+                } else {
+                    mAuth.getCurrentUser().sendEmailVerification();
+                    Toast.makeText(MainActivity.this, "Check your email to verify your account!",
+                            Toast.LENGTH_LONG).show();
+                    mAuth.signOut();
+                    overridePendingTransition(0, 0);
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                }
             }
             else
             {
