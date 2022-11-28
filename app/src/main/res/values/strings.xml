@@ -1,7 +1,15 @@
 <resources>
+    <!--app-->
     <string name="app_name">Scannr</string>
     <string name="register">Register</string>
     <string name="scannr_register">Register Now</string>
+
+    <!--Landing-->
+    <string name="landing_login">LOGIN</string>
+    <string name="landing_register">REGISTER</string>
+    <string name="landing_body">Collect receipts and redeem rewards while building healthy financial habits.</string>
+    <string name="landing_header">Receipt Rewards</string>
+    <string name="landing_title">scannr</string>
 
     <string name="forgot_password">Forgot Password</string>
     <string name="login">LOGIN</string>
@@ -17,6 +25,7 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_login_user">RegisterUser</string>
     <string name="title_activity_register_user">RegisterUser</string>
     <string name="first_name_input">First Name</string>
     <string name="last_name_input">Last Name</string>
@@ -39,4 +48,15 @@
     <string name="todo">TODO</string>
     <string name="title_activity_family_manager">Family Manager</string>
     <string name="addChild">add child</string>
+<<<<<<< Updated upstream
+=======
+    <string name="scannr_family_manager">Scannr Family Manager</string>
+    <string name="backButton">Back</string>
+    <string name="NoChildAccounts">NO CHILD ACCOUNTS</string>
+    <string name="title_activity_child_account_register">Register Child Account</string>
+    <string name="scannr_register_child">Register Child</string>
+    <string name="title">title</string>
+    <string name="header">header</string>
+    <string name="body">body</string>
+>>>>>>> Stashed changes
 </resources>
