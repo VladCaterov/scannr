@@ -7,9 +7,9 @@
 <!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
         <item name="colorPrimaryVariant">@color/primary</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/gray</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">@color/primaryDark</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
@@ -34,8 +34,8 @@
     </style>
 
     <style name="button.BorderWhite" parent="@android:style/Widget.Button">
-        <item name="android:backgroundTint">@color/primary</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/primaryDark</item>
         <item name="android:strokeColor">@color/white</item>
         <item name="android:strokeWidth">1</item>
         <item name="android:stateListAnimator">@null</item>
