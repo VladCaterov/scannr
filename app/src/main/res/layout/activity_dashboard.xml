@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/primaryDark"
     android:elevation="122dp">
 
     <ImageView
@@ -19,11 +19,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/bottom_navbar_bg" />
 
+    <ImageView
+        android:id="@+id/top_navbar"
+        android:layout_width="0dp"
+        android:layout_height="178dp"
+        android:contentDescription="@string/scannr"
+        android:foregroundTintMode="screen"
+        android:scaleY=".7"
+        android:translationY="-62dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bottom_navbar_bg_solid"
+        app:tint="@color/primaryDark" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/scannr"
+        android:elevation="10dp"
+        android:translationX="-20dp"
+        android:translationY="-20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:contentDescription="@string/scannr"
+        android:elevation="10dp"
+        android:text="@string/landing_title"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:translationX="-55dp"
+        android:translationY="-10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.29000002"
+        tools:text="@string/landing_title" />
+
     <FrameLayout
         android:id="@+id/home_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="67dp"
         android:layout_marginBottom="-105dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/imageView6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
