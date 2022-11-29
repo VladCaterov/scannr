@@ -1,8 +1,10 @@
 package com.example.scannr.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -42,7 +44,12 @@ import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
 public class CaptureFragment<textRecognizer> extends Fragment {
+    String TAG = "CaptureFragment";
     // UI Views
     public FloatingActionButton convertButton;
     public FloatingActionButton filesButton;
@@ -51,8 +58,8 @@ public class CaptureFragment<textRecognizer> extends Fragment {
     // URI of the image
     private Uri imageUri = null;
 
-    public static final int CAMERA_REQUEST_CODE = 100;
-    public static final int STORAGE_REQUEST_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE = 5432653;
+    public static final int STORAGE_REQUEST_CODE = 5432654;
 
     // array of permissions required to pick image from camera and gallery
     private String[] cameraPermissions;
@@ -114,6 +121,56 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         });
     }
 
+    private void sortContents(String text) {
+        String[] cache = new String[3];
+        Arrays.fill(cache, "0");
+        cache[1] = "2022.11.29"; // TODO: REMOVE
+        cache[2] = "2.09"; // TODO: REMOVE
+        ArrayList<Float> moneyList = new ArrayList<>();
+
+        StringTokenizer st = new StringTokenizer(text);
+        while (st.hasMoreTokens()) { // We need 3 things: Business name (0), Date (1), Receipt Total (2)
+            String currToken = st.nextToken();
+            if (currToken.contains("Texas") || currToken.contains("BON")) { // Business name
+                cache[0] = currToken;
+            } else if (currToken.contains("/") || currToken.contains("-")) { // Date
+                cache[1] = currToken;
+            } else if (currToken.contains("$") && currToken.matches("[-+]?[0-9]*\\.?[0-9]+")) { // Receipt Total (with $)
+                moneyList.add(Float.parseFloat(currToken.substring(1)));
+            }
+//            else if (currToken.contains(".")) {// (with .)
+//                // TODO: Handle decimals
+//            }
+        }
+
+        if (moneyList.size() > 0) {
+            //traverse moneyList and find the biggest value and put it in cache[3]
+            float max = 0;
+            int index = 0;
+            for (int i = 0; i < moneyList.size(); i++) {
+                if (moneyList.get(i) > max) {
+                    max = moneyList.get(i);
+                    index = i;
+                }
+            }
+
+            //set cache[3] to the biggest value
+            cache[2] = moneyList.get(index).toString() ;
+        }
+
+        // alert dialog builder to show business name, date, and total
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Receipt Information");
+        builder.setMessage("Business Name: " + cache[0] + "\nDate: " + cache[1] + "\nTotal: " + cache[2]);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     private void recognizeTextFromImage() {
         Log.d("CameraFragment", "recognizeTextFromImage: ");
         pd.setMessage("Recognizing Image...");
@@ -132,21 +189,22 @@ public class CaptureFragment<textRecognizer> extends Fragment {
                             String recognizedText = text.getText();
 
                             // TODO: IMAGE OUTPUT
-                            Log.d("CaptureFragment", "onSuccess: recognizedText" + recognizedText);
+                            sortContents(recognizedText);
+                            Log.d(TAG, "onSuccess: recognizedText" + recognizedText);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             pd.dismiss();
-                            Log.e("CaptureFragment", "onFailure: ", e);
+                            Log.e(TAG, "onFailure: ", e);
                             Toast.makeText(getActivity(), "Failed recognizing text due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } catch (Exception e) {
             // exception occured while preparing InputImage, dismiss dialog, show reason in toast
             pd.dismiss();
-            Log.e("CaptureFragment", "recognizeTextFromImage: ", e);
+            Log.e(TAG, "recognizeTextFromImage: ", e);
             Toast.makeText(getActivity(), "Failed preparing image due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -168,6 +226,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
                 if (id == 1) {
                     Log.d("CameraFragment", "onMenuItemClick: Camera Clicked");
                     if (checkCameraPermissions()) {
+                        Log.d("CameraFragment", "onMenuItemClick: Camera Clicked; Permissions Granted");
                         pickImageCamera();
                     } else {
                         requestCameraPermissions();
@@ -200,6 +259,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+                    Log.d(TAG, "onActivityResult: galleryActivityResultLauncher");
                     // if image is selected
                     if (result.getResultCode() == getActivity().RESULT_OK) {
                         Intent data = result.getData();
@@ -228,6 +288,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        cameraActivityResultLauncher.launch(intent);
     }
 
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
@@ -235,6 +296,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+                    Log.d(TAG, "onActivityResult: cameraActivityResultLauncher");
                     // if image is captured from camera
                     if (result.getResultCode() == getActivity().RESULT_OK) {
                         Log.d("CameraFragment", "onActivityResult: imageUri: " + imageUri);
@@ -250,6 +312,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
     );
 
     boolean checkStoragePermissions() {
+        Log.d(TAG, "checkStoragePermissions: ");
         // check if storage permission is enabled or not
         // return true if enabled and false if not enabled
         boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
@@ -257,6 +320,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
     }
 
     private void requestStoragePermissions() {
+        Log.d(TAG, "requestStoragePermissions: ");
         // request runtime storage permission
         ActivityCompat.requestPermissions(getActivity(), storagePermissions, STORAGE_REQUEST_CODE);
     }
@@ -267,10 +331,14 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         boolean cameraResult = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
         boolean storageResult = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
 
+        Log.d(TAG, "checkCameraPermissions: cameraResult: " + cameraResult + " | storageResult: " + storageResult);
+        Log.d(TAG, "checkCameraPermissions: cameraPermissions: " + Arrays.toString(cameraPermissions));
+
         return cameraResult && storageResult;
     }
 
     private void requestCameraPermissions() {
+        Log.d(TAG, "requestCameraPermissions: ");
         // request runtime camera permission
         ActivityCompat.requestPermissions(getActivity(), cameraPermissions, CAMERA_REQUEST_CODE);
     }
@@ -278,6 +346,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "onRequestPermissionsResult: ");
 
         switch (requestCode) {
             case CAMERA_REQUEST_CODE: {
