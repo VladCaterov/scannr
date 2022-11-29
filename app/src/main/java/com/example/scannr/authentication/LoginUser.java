@@ -19,6 +19,7 @@ import com.example.scannr.R;
 import com.example.scannr.dashboard.Dashboard;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,6 +48,12 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         logIn = findViewById(R.id.buttonLogin);
         logIn.setOnClickListener(this);
 
+        Button register = findViewById(R.id.registerLogin);
+        register.setOnClickListener(this);
+
+        FloatingActionButton flb = findViewById(R.id.backButtonRegister);
+        flb.setOnClickListener(this);
+
         forgotPassword = findViewById(R.id.forgotPasswordLogin);
         forgotPassword.setOnClickListener(this);
 
@@ -57,6 +64,13 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         switch(v.getId()){
             case R.id.buttonLogin:
                 userLogin();
+                break;
+            case R.id.backButtonRegister:
+                finish();
+                break;
+            case R.id.registerLogin:
+                finish();
+                startActivity(new Intent(LoginUser.this, RegisterUser.class));
                 break;
             case R.id.forgotPasswordLogin:
                 forgotPassword();
