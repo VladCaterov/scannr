@@ -1,65 +1,53 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
-
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+    <PreferenceCategory app:title="Account Settings">
 
         <ListPreference
             app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
+            app:entries="@array/name_reply_entries"
+            app:entryValues="@array/name_reply_values"
             app:key="reply"
-            app:title="@string/reply_title"
+            app:title="Edit Name"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="editPhoneNumber"
+            app:title="Edit Phone Number"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:key="signature"
+            app:title="Edit Birthday"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory>
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:title="Login Credentials">
 
         <EditTextPreference
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             app:key="signature"
-            app:title="@string/signature_title"
+            app:title="Edit Email Address"
             app:useSimpleSummaryProvider="true" />
-
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+        <EditTextPreference
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:key="signature"
+            app:title="Edit Password"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:title="Login Credentials"/>
+    <Preference
+        android:title="Logout of Account"
+        android:key="@string/scannr"
+        />
 
 </PreferenceScreen>
