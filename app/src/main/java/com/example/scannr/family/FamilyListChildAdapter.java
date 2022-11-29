@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
 
     public View getView(int position, View convertView, ViewGroup container) {
         LayoutInflater inflater = context.getLayoutInflater();
+
         View rowView = inflater.inflate(R.layout.activity_family_manager_list_child, null, true);
         Button delete =  rowView.findViewById(R.id.deleteChild);
         Button update =  rowView.findViewById(R.id.updateChild);
