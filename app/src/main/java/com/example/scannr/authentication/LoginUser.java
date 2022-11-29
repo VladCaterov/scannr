@@ -14,10 +14,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.scannr.MainActivity;
 import com.example.scannr.R;
 import com.example.scannr.dashboard.Dashboard;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -92,8 +96,22 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         }
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                assert mAuth.getCurrentUser() != null;
                 startActivity(new Intent(LoginUser.this, Dashboard.class));
+                db.collection("users")
+                        .document(mAuth.getUid())
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            try {
+                                MainActivity.isParent = (boolean) documentSnapshot.get("isParent");
+                                String fName = (String) documentSnapshot.get("fName");
+                                String lName = (String) documentSnapshot.get("lName");
+                                MainActivity.userName = fName + " " + lName;
+                                Log.d(TAG, "name: " + MainActivity.userName);
+                                Log.d(TAG, "isParent: " + MainActivity.isParent);
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
+                        });
 //               TODO: IF NEED BE, IMPLEMENT VERIFYING EMAIL
 //
 //                if (mAuth.getCurrentUser().isEmailVerified()) {

@@ -1,17 +1,15 @@
 package com.example.scannr.family;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 
 import androidx.annotation.NonNull;
 
-public class ChildListItemAdapter extends ArrayAdapter {
-    public ChildListItemAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
-    }
-
+public class FamilyListItemAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         return 0;
@@ -29,9 +27,9 @@ public class ChildListItemAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
+
         if (convertView == null) {
-//            LayoutInflater inflater = (LayoutInflater) Context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-//            convertView = getLayoutInflater().inflate(R.layout.activity_family_manager_list_child, container, false);
+//            convertView = getLayoutInflater().inflate(R.layout.list_item, container, false);
         }
         return convertView;
     }

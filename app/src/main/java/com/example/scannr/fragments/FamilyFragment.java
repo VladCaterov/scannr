@@ -2,17 +2,24 @@ package com.example.scannr.fragments;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.scannr.MainActivity;
 import com.example.scannr.R;
+import com.example.scannr.authentication.RegisterUser;
 import com.example.scannr.authentication.Validation;
+import com.example.scannr.family.ChildAccountManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.prefs.BackingStoreException;
 
 public class FamilyFragment extends Fragment {
     Validation validate = new Validation();
@@ -35,8 +43,7 @@ public class FamilyFragment extends Fragment {
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-    private int numChildren;
-    private TextView numChildrenMessage;
+    ChildFamilyFragment childFamilyFragment = new ChildFamilyFragment();
 
     public FamilyFragment() {
 
@@ -46,37 +53,24 @@ public class FamilyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_family, container, false);
-//        FloatingActionButton flb = findViewById(R.id.backButtonFamilyManager);
-//        flb.setOnClickListener(this);
-//
-//        setNumChildrenText();
-//        setChildUsers();
-//
-//        FloatingActionButton addChildBtn = findViewById(R.id.buttonAddChild);
-//        addChildBtn.setOnClickListener(this);
     }
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.backButtonFamilyManager:
-//                finish();
-//                break;
-//            case R.id.buttonAddChild:
-//                startActivity(new Intent(FamilyManager.this, ChildAccountManager.class));
-//                break;
-//
-//        }
-//    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        if (!MainActivity.isParent){
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, childFamilyFragment).commit();
+        }
+        else{
+            setNumChildrenText();
+            setChildUsers();
+            FloatingActionButton addChildButton = requireView().findViewById(R.id.buttonAddChild);
+            addChildButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), ChildAccountManager.class)));
+        }
     }
 
     private void setNumChildrenText() {
-        numChildrenMessage = getView().findViewById(R.id.numChildren);
+        TextView numChildrenMessage = requireView().findViewById(R.id.numChildren);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -85,16 +79,17 @@ public class FamilyFragment extends Fragment {
                 .document(Objects.requireNonNull(mAuth.getUid()))
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    String text = "You Have " + documentSnapshot.get("numChildren") + " Children";
-                    numChildrenMessage.setText(text);
+                    try {
+                        String text = "You Have " + documentSnapshot.get("numChildren") + " Children";
+                        numChildrenMessage.setText(text);
+                    } catch (Exception e){
+                        System.out.println(e);
+                    }
                     Log.d(TAG, "numChildren: "+ documentSnapshot.get("numChildren"));
                 });
     }
     private void setChildUsers(){
-        class ChildListItemAdapter extends ArrayAdapter {
-            public ChildListItemAdapter(@NonNull Context context, int resource, @NonNull ArrayList<String> objects) {
-                super(context, resource, objects);
-            }
+        class ChildListItemAdapter extends BaseAdapter {
 
             @Override
             public int getCount() {
@@ -113,18 +108,18 @@ public class FamilyFragment extends Fragment {
 
             @Override
             public View getView(int position, View convertView, ViewGroup container) {
-//                if (convertView == null) {
-//                    convertView = getLayoutInflater().inflate(R.layout.activity_family_manager_list_child, container, true);
-//                }
-                return getLayoutInflater().inflate(R.layout.activity_family_manager_list_child, container, true);
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.activity_family_manager_list_child, container, false);
+                }
+                return convertView;
             }
 
         }
-//        ArrayList<String> arrayList;
-//        arrayList = new ArrayList<>();
-//        ChildListItemAdapter childListItemAdapter = new ChildListItemAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
-//        ListView childList = findViewById(R.id.childrenListView);
-//        childList.setAdapter(childListItemAdapter);
+        ArrayList<String> arrayList;
+        arrayList = new ArrayList<>();
+        ChildListItemAdapter childListItemAdapter = new ChildListItemAdapter();
+        ListView childList = getActivity().findViewById(R.id.childrenListView);
+        childList.setAdapter(childListItemAdapter);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         CollectionReference usersRef = db.collection("users");
@@ -138,8 +133,8 @@ public class FamilyFragment extends Fragment {
                         String fName = documentSnapshot.getString("fName");
                         String lName = documentSnapshot.getString("lName");
                         name = fName + lName;
-//                        arrayList.add(name);
-//                        childListItemAdapter.notifyDataSetChanged();
+                        arrayList.add(name);
+                        childListItemAdapter.notifyDataSetChanged();
 
                     }
                 }

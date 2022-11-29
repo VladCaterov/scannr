@@ -90,6 +90,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         user.put("numChildren", 0);
         user.put("rewards", new ArrayList<>());
         user.put("numRewards", 0);
+        user.put("isParent", true);
 
 
         if (validate.isEmptyFirstName(fName)) {

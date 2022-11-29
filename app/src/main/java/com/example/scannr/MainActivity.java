@@ -11,6 +11,8 @@ import com.example.scannr.authentication.LoginUser;
 import com.example.scannr.authentication.RegisterUser;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public static boolean isParent;
+    public static String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
