@@ -44,7 +44,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 public class CaptureFragment<textRecognizer> extends Fragment {
     // UI Views
-    public FloatingActionButton captureButton;
+    public FloatingActionButton convertButton;
     public FloatingActionButton filesButton;
     private ShapeableImageView imageView;
 
@@ -79,7 +79,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialize UI Views
-        captureButton = view.findViewById(R.id.captureButton);
+        convertButton = view.findViewById(R.id.convertButton);
         filesButton = view.findViewById(R.id.filesButton);
         imageView = view.findViewById(R.id.cameraViewOutput);
 
@@ -102,7 +102,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
             }
         });
 
-        captureButton.setOnClickListener(new View.OnClickListener() {
+        convertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (imageUri == null) {
