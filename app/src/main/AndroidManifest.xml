@@ -89,19 +89,6 @@
                 android:value="ocr" />
         </activity>
 
-        <activity
-            android:name=".family.UpdateChildForm"
-            android:exported="false"
-            android:label="@string/title_activity_update_child_form"
-
-            android:theme="@style/Theme.Scannr.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-            <meta-data
-                android:name="com.google.mlkit.vision.DEPENDENCIES"
-                android:value="ocr" />
-        </activity>
     </application>
 
 </manifest>
