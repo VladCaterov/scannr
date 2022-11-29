@@ -1,53 +1,61 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Account Settings">
+    <PreferenceCategory
+        app:key="account_title"
+        app:title="Account Settings">
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/name_reply_entries"
-            app:entryValues="@array/name_reply_values"
-            app:key="reply"
+        <EditTextPreference
+            app:dialogLayout="@null"
+            app:key="editName"
+            app:summary="Loading..."
             app:title="Edit Name"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="false" />
         <EditTextPreference
-            app:key="editPhoneNumber"
+            app:key="editPhone"
+            app:summary="Loading..."
             app:title="Edit Phone Number"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="false" />
         <EditTextPreference
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            app:key="signature"
+            android:layout_height="wrap_content"
+            app:key="editBirthday"
+            app:summary="Loading..."
             app:title="Edit Birthday"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="false" />
 
     </PreferenceCategory>
     <PreferenceCategory
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:key="login_title"
         app:title="Login Credentials">
 
         <EditTextPreference
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            app:key="signature"
+            android:layout_height="wrap_content"
+            app:key="editEmail"
+            app:summary="Loading..."
             app:title="Edit Email Address"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="false" />
         <EditTextPreference
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            app:key="signature"
+            android:layout_height="wrap_content"
+            app:defaultValue="************"
+            app:dialogLayout="@null"
+            app:key="editPassword"
+            app:summary="*************"
             app:title="Edit Password"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="false" />
 
     </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:title="Login Credentials"/>
+        app:key="session_title"
+        app:title="Session" />
     <Preference
-        android:title="Logout of Account"
-        android:key="@string/scannr"
-        />
+        android:key="sessionLogout"
+        android:title="Logout of Account" />
 
 </PreferenceScreen>
