@@ -42,6 +42,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
         editEmail= findViewById(R.id.emailLogin);
         editPassword= findViewById(R.id.passwordLogin);
+
         logIn = findViewById(R.id.buttonLogin);
         logIn.setOnClickListener(this);
 
@@ -58,7 +59,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         switch(v.getId()){
             case R.id.buttonLogin:
                 userLogin();
-//                startActivity(new Intent(MainActivity.this, FamilyManager.class));
                 break;
             case R.id.registerLogin:
                 registerUserScreen();
@@ -94,16 +94,25 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             editPassword.requestFocus();
             return;
         }
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            mAuth.signOut();
+        }
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                assert user != null;
-                if (user.isEmailVerified()) {
+                assert mAuth.getCurrentUser() != null;
+                if (mAuth.getCurrentUser().isEmailVerified()) {
                     startActivity(new Intent(LoginUser.this, Dashboard.class));
                 } else {
-                    user.sendEmailVerification();
+                    mAuth.getCurrentUser().sendEmailVerification();
                     Toast.makeText(LoginUser.this, "Check your email to verify your account!",
                             Toast.LENGTH_LONG).show();
+                    mAuth.signOut();
+                    overridePendingTransition(0, 0);
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
                 }
             }
             else
@@ -116,59 +125,48 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     private void registerUserScreen(){
         startActivity(new Intent(LoginUser.this,RegisterUser.class));
     }
-    private void loginUserScreen(){
-        startActivity(new Intent(LoginUser.this,MainActivity.class));
-
-        editEmail= findViewById(R.id.emailLogin);
-        editPassword= findViewById(R.id.passwordLogin);
-
-        Button logIn = findViewById(R.id.buttonLogin);
-        logIn.setOnClickListener(this);
-
-        TextView register = findViewById(R.id.registerLogin);
-        register.setOnClickListener(this);
-
-        TextView forgotPassword = findViewById(R.id.forgotPasswordLogin);
-        forgotPassword.setOnClickListener(this);
-    }
     private void forgotPassword(){
+        mAuth= FirebaseAuth.getInstance();
+
         View view = getLayoutInflater().inflate(R.layout.dialog_forgot_password,null, true);
-        emailToSend = view.findViewById(R.id.emailForgotPass);
-        String email = emailToSend.getText().toString().trim();
+        EditText emailToSend = view.findViewById(R.id.emailForgotPass);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // Add the buttons
         builder.setView(view)
-
                 .setPositiveButton(R.string.ok, (dialog, id) -> {
+                    String email = emailToSend.getText().toString().trim();
 
                     // SEND FORGET PASSWORD EMAIL
                     if (validate.isEmptyEmail(email)) {
                         Toast.makeText(LoginUser.this, "Email Failed To Send:\nAn Email Is Required",
-                                Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_LONG).show();
                     }
-                    else if (!validate.validateEmail(email)) {
+                    if (!validate.validateEmail(email)) {
                         Toast.makeText(LoginUser.this, "Email Failed To Send:\nPlease Enter a Valid Email",
-                                Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_LONG).show();
                     }
                     else{
-                        String message = "If you have an account, check your" + email + "email to reset your password!";
+                        String message = "Check your " + email + " email to reset your password!";
                         // QUERY IF EMAIL EXISTS IN SYSTEM
                         db.collection("users")
-                                .get()
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if (document.get("email") == email){
-                                                mAuth.sendPasswordResetEmail(email);
-                                            }
+                            .whereEqualTo("email", email)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (Objects.equals(document.getData().get("email"), email)){
+                                            mAuth.sendPasswordResetEmail(email);
+                                            Toast.makeText(LoginUser.this, message,Toast.LENGTH_LONG).show();
+                                            return;
                                         }
-                                    } else {
-                                        Log.d(TAG, "Error getting documents: ", task.getException());
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
                                     }
-                                });
-                        Toast.makeText(LoginUser.this, message,
-                                Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginUser.this, "No email found",Toast.LENGTH_LONG).show();
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            });
                     }
 
                 })
