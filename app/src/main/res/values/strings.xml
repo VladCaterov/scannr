@@ -84,5 +84,6 @@
     <string name="update">UPDATE</string>
     <string name="delete">DELETE</string>
     <string name="register_child_user">REGISTER CHILD USER</string>
+    <string name="create_reward">CREATE REWARD</string>
 
 </resources>

@@ -20,6 +20,7 @@ import com.example.scannr.R;
 import com.example.scannr.authentication.RegisterUser;
 import com.example.scannr.authentication.Validation;
 import com.example.scannr.family.ChildAccountManager;
+import com.example.scannr.family.FamilyListItemAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +40,8 @@ import java.util.Objects;
 import java.util.prefs.BackingStoreException;
 
 public class FamilyFragment extends Fragment {
+    ListView list;
+
     Validation validate = new Validation();
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -81,8 +84,15 @@ public class FamilyFragment extends Fragment {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     try {
-                        String text = "You Have " + documentSnapshot.get("numChildren") + " Children";
-                        numChildrenMessage.setText(text);
+                        if (Objects.requireNonNull(documentSnapshot.get("numChildren")).toString().equals("1")){
+                            String text = "You Have 1 Child";
+                            numChildrenMessage.setText(text);
+                        }
+                        else{
+                            String text = "You Have " + documentSnapshot.get("numChildren") + " Children";
+                            numChildrenMessage.setText(text);
+                        }
+
                     } catch (Exception e){
                         System.out.println(e);
                     }
@@ -90,36 +100,9 @@ public class FamilyFragment extends Fragment {
                 });
     }
     private void setChildUsers(){
-        class ChildListItemAdapter extends BaseAdapter {
-
-            @Override
-            public int getCount() {
-                return 0;
-            }
-
-            @Override
-            public Object getItem(int i) {
-                return null;
-            }
-
-            @Override
-            public long getItemId(int i) {
-                return 0;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup container) {
-                if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(R.layout.activity_family_manager_list_child, container, false);
-                }
-                return convertView;
-            }
-
-        }
-        ArrayList<String> arrayList;
-        arrayList = new ArrayList<>();
-        ChildListItemAdapter childListItemAdapter = new ChildListItemAdapter();
-        ListView childList = getActivity().findViewById(R.id.childrenListView);
+        ListView childList = requireActivity().findViewById(R.id.childrenListView);
+        ArrayList<String> arrayList = new ArrayList<>();
+        FamilyListItemAdapter childListItemAdapter = new FamilyListItemAdapter(getActivity(), arrayList)  ;
         childList.setAdapter(childListItemAdapter);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -136,9 +119,9 @@ public class FamilyFragment extends Fragment {
                         name = fName + lName;
                         arrayList.add(name);
                         childListItemAdapter.notifyDataSetChanged();
-
                     }
                 }
             });
+
     }
 }

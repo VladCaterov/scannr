@@ -57,13 +57,34 @@
         android:orientation="vertical"
         android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent">
-
         <Button
+            android:layout_gravity="center"
             android:id="@+id/addChildButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/primary"
+            android:elevation="0dp"
+            android:hapticFeedbackEnabled="false"
+            android:stateListAnimator="@null"
             android:text="@string/register_child_user"
-            android:layout_gravity="center"/>
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:theme="@style/Theme.Scannr.Button.BorderWhite"
+            app:layout_constraintBottom_toTopOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="@color/white"
+            app:strokeWidth="1dp" />
+<!--        <Button-->
+<!--            android:id="@+id/addChildButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/register_child_user"-->
+<!--            android:layout_gravity="center"/>-->
     </LinearLayout>
 <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--    android:id="@+id/buttonAddChild"-->

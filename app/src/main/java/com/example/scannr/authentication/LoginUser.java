@@ -103,10 +103,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                         .addOnSuccessListener(documentSnapshot -> {
                             try {
                                 MainActivity.isParent = (boolean) documentSnapshot.get("isParent");
-                                String fName = (String) documentSnapshot.get("fName");
-                                String lName = (String) documentSnapshot.get("lName");
-                                MainActivity.userName = fName + " " + lName;
-                                Log.d(TAG, "name: " + MainActivity.userName);
                                 Log.d(TAG, "isParent: " + MainActivity.isParent);
                             } catch (Exception e){
                                 System.out.println(e);
