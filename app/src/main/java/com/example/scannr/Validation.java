@@ -20,7 +20,22 @@ public class Validation {
 
     public boolean isEmptyFirstName(String fName) { return fName.isEmpty(); }
     public boolean isEmptyLastName(String lName) { return lName.isEmpty(); }
+    public boolean validatePhoneNumber(String phoneNumber){
+        return Patterns.PHONE.matcher(phoneNumber).matches();
+    }
     public boolean isEmptyPhoneNumber(String phoneNumber) { return phoneNumber.isEmpty(); }
+    public boolean isEmptyDateOfBirth(String dateOfBirth) { return dateOfBirth.isEmpty(); }
+
+    public boolean isEmptyBankAccountNumber(String bankAccountNumber) { return bankAccountNumber.isEmpty(); }
+    public boolean validateBankAccountNumber(String bankAccountNumber){
+        return bankAccountNumber.length() > 8;
+    }
+
+    public boolean isEmptyBankRoutingNumber(String bankRoutingNumber) { return bankRoutingNumber.isEmpty(); }
+    public boolean isEmptySpendingLimit(String spendingLimit) { return spendingLimit.isEmpty(); }
+
+
+
 
 
 }

@@ -5,9 +5,18 @@
         android:orientation="vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="100dp">
-        <TextView
+        android:layout_marginBottom="10dp">
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/backButtonRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|top"
+        android:contentDescription="@string/backButton"
+        android:src="@drawable/back_arrow"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/purple_500"/>
+
+    <TextView
             android:id="@+id/scannr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +38,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-
         android:layout_marginTop="24dp">
 
         <EditText
@@ -78,6 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:hint="@string/date_of_birth"
+        android:inputType="date"
         android:textSize="24sp"
         android:layout_marginTop="24dp"
         />
@@ -102,7 +111,6 @@
         android:inputType="textPassword"
         android:textSize="24sp"
         android:layout_marginTop="24dp"/>
-
     <Button
         android:id="@+id/registerButton"
         android:layout_width="177dp"

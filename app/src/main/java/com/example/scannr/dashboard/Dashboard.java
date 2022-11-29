@@ -84,7 +84,29 @@ public class Dashboard extends AppCompatActivity implements NavigationBarView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, settingsFragment).commit();
                 return true;
         }
-        return false;
+//         return false;
+        else{
+            greeting = "Hello User";
+        }
+        welcomeMessage.setText(greeting);
+    }
+
+    private void logout(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(Dashboard.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        // Add the buttons
+        builder.setView(inflater.inflate(R.layout.dialog_logout, null))
+                .setPositiveButton(R.string.ok, (dialog, id) -> {
+                    // Sign Out
+                    mAuth.signOut();
+                    finish();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                    dialog.cancel();
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
 

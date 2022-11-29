@@ -16,17 +16,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.scannr.Validation;
 import com.example.scannr.R;
 import com.example.scannr.dashboard.Dashboard;
-import com.example.scannr.family_manager.FamilyManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    Validation validate = new Validation();
+    private EditText editEmail;
+    private EditText editPassword;
+    private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
 

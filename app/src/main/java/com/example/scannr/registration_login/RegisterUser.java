@@ -1,14 +1,18 @@
 package com.example.scannr.registration_login;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import com.example.scannr.R;
 import com.example.scannr.Validation;
-import com.example.scannr.dashboard.Dashboard;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,54 +24,60 @@ import android.widget.Button;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener{
+    private Validation validate = new Validation();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    Validation validate = new Validation();
 
-    private Button register;
-    private EditText editFirstName, editLastName, editEmail, editPassword,
-        editPhoneNumber, editDOB, editMiddleInitial;
+    private EditText editFirstName, editMiddleInitial, editLastName,
+        editPhoneNumber, editDOB, editEmail, editPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
 
+        FloatingActionButton flb = findViewById(R.id.backButtonRegister);
+        flb.setOnClickListener(this);
+
         editFirstName = findViewById(R.id.firstNameRegister);
         editMiddleInitial = findViewById(R.id.middleInitialRegister);
         editLastName = findViewById(R.id.lastNameRegister);
         editPhoneNumber = findViewById(R.id.phoneRegister);
-
         editPhoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         editDOB = findViewById(R.id.dobRegister);
-        editDOB.setOnClickListener(this);
         editEmail= findViewById(R.id.emailRegister);
         editPassword= findViewById(R.id.passwordRegister);
 
-        register = findViewById(R.id.registerButton);
+        Button register = findViewById(R.id.registerButton);
         register.setOnClickListener(this);
-
-
     }
 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.registerButton) {
-            registerUser();
+        switch (v.getId()){
+            case R.id.backButtonRegister:
+                finish();
+                break;
+            case R.id.registerButton:
+                registerUser();
+                break;
         }
+
     }
     private void registerUser(){
         String fName = editFirstName.getText().toString().trim();
-        String mInitial = editMiddleInitial.getText().toString().trim();
+        String mInitial = editMiddleInitial.getText().toString().trim().toUpperCase();
         String lName = editLastName.getText().toString().trim();
         String dob = editDOB.getText().toString().trim();
         String phoneNumber = editPhoneNumber.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
+
 
         Map<String, Object> user = new HashMap<>();
         user.put("fName", fName);
@@ -76,26 +86,30 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         user.put("dob", dob);
         user.put("email", email);
         user.put("phoneNumber", phoneNumber);
+        user.put("children", new ArrayList<>());
         user.put("numChildren", 0);
+        user.put("rewards", new ArrayList<>());
         user.put("numRewards", 0);
 
 
-        //path validation
         if (validate.isEmptyFirstName(fName)) {
             editFirstName.setError("First Name is required!");
             editFirstName.requestFocus();
             return;
         }
-        //path validation
         if (validate.isEmptyLastName(lName)) {
-            editLastName.setError("First Name is required!");
+            editLastName.setError("Last Name is required!");
             editLastName.requestFocus();
             return;
         }
-        //path validation
         if (validate.isEmptyPhoneNumber(phoneNumber)) {
-            editPhoneNumber.setError("First Name is required!");
+            editPhoneNumber.setError("Phone Number is required!");
             editPhoneNumber.requestFocus();
+            return;
+        }
+        if (validate.isEmptyDateOfBirth(dob)) {
+            editDOB.setError("Date of Birth is required!");
+            editDOB.requestFocus();
             return;
         }
         if (validate.isEmptyEmail(email)) {
@@ -120,31 +134,39 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         }
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    if (!task.isSuccessful()) {
-                        // If register fails, display a message to the user.
-                        Toast.makeText(RegisterUser.this, "Authentication failed.",
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                    if (task.isSuccessful()) {
+                        // CREATE USER IN DATABASE FOR ADDITIONAL INFORMATION
+                        FirebaseUser user1 = mAuth.getCurrentUser();
+                        String displayName;
+                        if (mInitial.length() == 0){
+                            displayName = fName + " " + lName;
+                        }
+                        else{
+                            displayName = fName + " " + mInitial + ". " + lName;
+                        }
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(displayName)
+                                .build();
+                        assert user1 != null;
+                        user1.updateProfile(profileUpdates);
+                        db.collection("users")
+                                .document(user1.getUid())
+                                .set(user)
+                                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+
+                        startActivity(new Intent(RegisterUser.this, MainActivity.class));
+                        Toast.makeText(RegisterUser.this, "Registration Successful.",
                                 Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
-                        // CREATE USER IN DATABASE FOR ADDITIONAL INFORMATION
-                        FirebaseUser user1 = mAuth.getCurrentUser();
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(fName + " " + mInitial + ". " + lName)
-                                .build();
-                        assert user1 != null;
-                        user1.updateProfile(profileUpdates);
-
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        db.collection("users")
-                                .document(user1.getUid())
-                                .set(user);
-
-                        startActivity(new Intent(RegisterUser.this, MainActivity.class));
+                        // If register fails, display a message to the user.
+                        Toast.makeText(RegisterUser.this, "Registration failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
-
-
 }

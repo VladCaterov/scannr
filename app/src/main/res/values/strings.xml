@@ -53,6 +53,7 @@
     <string name="NoChildAccounts">NO CHILD ACCOUNTS</string>
     <string name="title_activity_child_account_register">Register Child Account</string>
     <string name="scannr_register_child">Register Child</string>
+
     <string name="title">title</string>
     <string name="header">header</string>
     <string name="body">body</string>
@@ -75,4 +76,12 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="BankRoutingNumber">Bank Routing Number</string>
+    <string name="BankAccountNumber">Bank Account Number</string>
+    <string name="SpendingLimit">Spending Limit</string>
+    <string name="registerChild">REGISTER CHILD</string>
+    <string name="update">UPDATE</string>
+    <string name="delete">DELETE</string>
+
 </resources>

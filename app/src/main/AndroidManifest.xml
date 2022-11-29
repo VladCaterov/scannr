@@ -39,9 +39,8 @@
         </activity>
         <activity
             android:name=".registration_login.RegisterUser"
-            android:exported="false"
-            android:label="@string/title_activity_register_user"
-            android:theme="@style/Theme.Scannr.NoActionBar">
+            android:exported="true"
+            android:label="@string/title_activity_register_user">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -49,6 +48,13 @@
         </activity>
         <activity
             android:name=".rewards.Rewards"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".settings.Settings"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -76,6 +82,20 @@
             android:name=".receipt_manager.ReceiptManager"
             android:exported="false"
             android:label="@string/receipt_manager_title"
+                  
+            android:theme="@style/Theme.Scannr.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+            <meta-data
+                android:name="com.google.mlkit.vision.DEPENDENCIES"
+                android:value="ocr" />
+        </activity>
+        <activity
+            android:name=".family_manager.ChildAccountManager"
+            android:exported="false"
+            android:label="@string/title_activity_child_account_register"
+
             android:theme="@style/Theme.Scannr.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
