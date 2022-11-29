@@ -5,7 +5,7 @@
         app:key="account_title"
         app:title="Account Settings">
 
-        <EditTextPreference
+        <Preference
             app:dialogLayout="@null"
             app:key="editName"
             app:summary="Loading..."
@@ -38,7 +38,7 @@
             app:summary="Loading..."
             app:title="Edit Email Address"
             app:useSimpleSummaryProvider="false" />
-        <EditTextPreference
+        <Preference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:defaultValue="************"

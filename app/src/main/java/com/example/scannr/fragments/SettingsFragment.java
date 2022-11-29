@@ -54,11 +54,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         super.onViewCreated(view, savedInstanceState);
 
         // get preference components
-        EditTextPreference editName = (EditTextPreference) findPreference("editName");
+        Preference editName = (Preference) findPreference("editName");
         EditTextPreference editPhone = (EditTextPreference) findPreference("editPhone");
         EditTextPreference editBirthday = (EditTextPreference) findPreference("editBirthday");
         EditTextPreference editEmail = (EditTextPreference) findPreference("editEmail");
-        EditTextPreference editPassword = (EditTextPreference) findPreference("editPassword");
+        Preference editPassword = (Preference) findPreference("editPassword");
         Preference sessionLogout = (Preference) findPreference("sessionLogout");
 
 
@@ -145,21 +145,44 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 String email = userEmail;
 
                 // open custom dialog_edit_password
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                // open custom dialog_edit_name
                 ViewGroup viewGroup = view.findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_password, viewGroup, false);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setCancelable(true);
+                builder.setPositiveButton("OK", (dialog, id) -> {
+                    // update fName, mInitial, and lName in firebase if value exists
+                    String currentPassword = ((EditText) dialogView.findViewById(R.id.currentPassword)).getText().toString();
+                    String newPassword = ((EditText) dialogView.findViewById(R.id.newPassword)).getText().toString();
+
+                    if (validate.isEmptyPassword(newPassword)) {
+                        dialog.cancel();
+                    }
+                    if (validate.validatePassword(newPassword)) {
+                        dialog.cancel();
+                    }
+
+                    try {
+                        // re-authenticate user
+                        updateUserPassword(user, email, currentPassword, newPassword);
+
+                        String hiddenString = "";
+                        for (int i = 0; i < newPassword.length(); i++) {
+                            hiddenString += "*";
+                        }
+
+                        // update summary
+                        updateSummary(preference, hiddenString);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                });
+                builder.setNegativeButton("Cancel",
+                        (dialog, id) -> dialog.cancel());
                 builder.setView(dialogView);
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-
-                // get current user's password
-                String password = ((EditTextPreference) findPreference("currentPassword")).getText();
-
-                // get new password
-                String newPassword = ((EditTextPreference) findPreference("newPassword")).getText();
-
-                // re-authenticate user
-                updateUserPassword(user, email, password, newPassword);
 
                 return true;
             });
@@ -169,52 +192,48 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // check to see if name preference is clicked, and open dialogue
         if (editName != null) {
             editName.setOnPreferenceClickListener(preference -> {
-                // open custom dialog_edit_name
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setCancelable(true);
-                builder.setPositiveButton("OK",
-                        (dialog, id) -> {
-                            // update fName, mInitial, and lName in firebase if value exists
-                            System.out.println("lryanle "+dialog.toString() + " +");
 
-                        });
-                builder.setNegativeButton("Cancel",
-                        (dialog, id) -> dialog.cancel());
+                // open custom dialog_edit_name
                 ViewGroup viewGroup = view.findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_name, viewGroup, false);
-                builder.setView(dialogView);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
 
-                try {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setCancelable(true);
+                builder.setPositiveButton("OK", (dialog, id) -> {
+                    // update fName, mInitial, and lName in firebase if value exists
                     String fName = ((EditText) dialogView.findViewById(R.id.fName)).getText().toString();
                     String mInitial = ((EditText) dialogView.findViewById(R.id.mInitial)).getText().toString();
                     String lName = ((EditText) dialogView.findViewById(R.id.lName)).getText().toString();
 
-                    if (!fName.isEmpty()) {
-                        db.collection("users")
-                                .document(mAuth.getUid())
-                                .update("fName", fName);
-                    }
-                    if (!mInitial.isEmpty()) {
+                    try {
+                        if (!fName.isEmpty()) {
+                            db.collection("users")
+                                    .document(mAuth.getUid())
+                                    .update("fName", fName);
+                        }
+                        if (!mInitial.isEmpty()) { mInitial = ""; }
+
                         db.collection("users")
                                 .document(mAuth.getUid())
                                 .update("mInitial", mInitial);
+
+                        if (!lName.isEmpty()) {
+                            db.collection("users")
+                                    .document(mAuth.getUid())
+                                    .update("lName", lName);
+                        }
+
+                        // update summary
+                        updateSummary(preference, (fName + " " + mInitial + " " + lName).trim().replaceAll(" +", " "));
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
-                    if (!lName.isEmpty()) {
-                        db.collection("users")
-                                .document(mAuth.getUid())
-                                .update("lName", lName);
-                    }
-
-                    // update summary
-                    updateSummary(preference, (fName + " " + mInitial + " " + lName).trim().replaceAll(" +", " "));
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-
-
-
+                });
+                builder.setNegativeButton("Cancel",
+                        (dialog, id) -> dialog.cancel());
+                builder.setView(dialogView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
 
                 return true;
             });
