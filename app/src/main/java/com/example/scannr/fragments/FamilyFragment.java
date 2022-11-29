@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -64,7 +65,7 @@ public class FamilyFragment extends Fragment {
         else{
             setNumChildrenText();
             setChildUsers();
-            FloatingActionButton addChildButton = requireView().findViewById(R.id.buttonAddChild);
+            Button addChildButton = requireView().findViewById(R.id.addChildButton);
             addChildButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), ChildAccountManager.class)));
         }
     }

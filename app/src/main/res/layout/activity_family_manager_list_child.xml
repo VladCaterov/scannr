@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_gravity="center">
-    <!--tools:context=".family_manager.FamilyManager"-->
 
     <TextView
         android:id="@+id/childName"

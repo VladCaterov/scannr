@@ -83,5 +83,6 @@
     <string name="registerChild">REGISTER CHILD</string>
     <string name="update">UPDATE</string>
     <string name="delete">DELETE</string>
+    <string name="register_child_user">REGISTER CHILD USER</string>
 
 </resources>

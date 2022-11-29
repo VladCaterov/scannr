@@ -1,67 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/family_manager_layout"
-xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/family_manager_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
 
-android:layout_width="match_parent"
-android:layout_height="match_parent" >
-
-<LinearLayout
-    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="50dp"
-    android:orientation="vertical"
-    app:layout_constraintTop_toTopOf="parent"
-    tools:layout_editor_absoluteX="0dp">
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/scannr"
-        android:textSize="48sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/family_manager"
-        android:textSize="48sp"
-        android:textStyle="bold" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:text="@string/scannr"-->
+<!--            android:textSize="48sp"-->
+<!--            android:textStyle="bold" />-->
 
-    <TextView
-        android:id="@+id/numChildren"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/family_manager"
+            android:textSize="48sp"
+            android:textStyle="bold" />
 
-        android:layout_marginTop="20dp"
-        android:textStyle="bold" />
-
-</LinearLayout>
+        <TextView
+            android:id="@+id/numChildren"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="24sp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/childrenListView"
-        android:layout_width="411dp"
-        android:layout_height="326dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonAddChild"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/addChildButtonLayout"/>
 
-<com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/buttonAddChild"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="50dp"
-    android:backgroundTint="@color/purple_500"
+    <LinearLayout
+        android:id="@+id/addChildButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    android:contentDescription="@string/addChild"
-    android:src="@drawable/add"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/addChildButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_child_user"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+<!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--    android:id="@+id/buttonAddChild"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginBottom="50dp"-->
+<!--    android:backgroundTint="@color/purple_500"-->
+
+<!--    android:contentDescription="@string/addChild"-->
+<!--    android:src="@drawable/add"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
