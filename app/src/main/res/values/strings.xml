@@ -88,5 +88,7 @@
     <string name="create_reward">CREATE REWARD</string>
     <string name="list_of_all_family_members">LIST OF ALL FAMILY MEMBERS</string>
     <string name="family_viewer">Family Viewer</string>
+    <string name="update_child_user">Update Child User</string>
+    <string name="title_activity_update_child_form">Update Child Form</string>
 
 </resources>

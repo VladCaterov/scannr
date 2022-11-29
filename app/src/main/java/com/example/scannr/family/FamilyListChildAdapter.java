@@ -1,6 +1,7 @@
 package com.example.scannr.family;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.scannr.MainActivity;
 import com.example.scannr.R;
+import com.example.scannr.authentication.RegisterUser;
+import com.example.scannr.rewards.CreateRewardForm;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,25 +43,12 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
         Button delete =  rowView.findViewById(R.id.deleteChild);
         Button update =  rowView.findViewById(R.id.updateChild);
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                Toast.makeText(context, "DELETE CHILD" + childID.get(position),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        delete.setOnClickListener(v -> Toast.makeText(context, "DEMO: DELETE CHILD - " + childID.get(position),
+                Toast.LENGTH_SHORT).show());
 
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                Toast.makeText(context, "DELETE CHILD" + childID.get(position),
-                        Toast.LENGTH_SHORT).show();
+        update.setOnClickListener(v -> {
+            context.startActivity(new Intent(context, UpdateChildForm.class));
 
-            }
         });
         TextView fName = rowView.findViewById(R.id.firstNameChild);
         fName.setText(firstName.get(position));
