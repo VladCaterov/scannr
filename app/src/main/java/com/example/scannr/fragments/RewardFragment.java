@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.*;
 
@@ -19,7 +20,6 @@ import com.example.scannr.family.ChildAccountManager;
 import com.example.scannr.rewards.CreateRewardForm;
 
 public class RewardFragment extends Fragment {
-    ChildRewardFragment childRewardFragment = new ChildRewardFragment();
 
     public RewardFragment() {
         // require a empty public constructor
@@ -34,12 +34,10 @@ public class RewardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (!MainActivity.isParent){
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, childRewardFragment).commit();
-        }
-        else{
-            Button createRewardButton = requireView().findViewById(R.id.createRewardButton);
-            createRewardButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), CreateRewardForm.class)));
-        }
+
+        Button createRewardButton = requireView().findViewById(R.id.createRewardButton);
+        createRewardButton.setOnClickListener(v ->
+//                startActivity(new Intent(getActivity(), CreateRewardForm.class))
+                        Toast.makeText(getContext(), "CREATE REWARD", Toast.LENGTH_SHORT));
     }
 }
