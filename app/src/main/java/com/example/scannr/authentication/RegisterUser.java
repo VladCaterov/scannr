@@ -54,6 +54,9 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 
         Button register = findViewById(R.id.registerButton);
         register.setOnClickListener(this);
+
+        Button login = findViewById(R.id.buttonLogin);
+        login.setOnClickListener(this);
     }
 
 
@@ -65,6 +68,10 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.registerButton:
                 registerUser();
+                break;
+            case R.id.buttonLogin:
+                finish();
+                startActivity(new Intent(RegisterUser.this, LoginUser.class));
                 break;
         }
 

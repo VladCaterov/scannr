@@ -2,7 +2,7 @@
     <!--app-->
     <string name="app_name">Scannr</string>
     <string name="register">Register</string>
-    <string name="scannr_register">Register Now</string>
+    <string name="scannr_register">Create Account</string>
 
     <!--Landing-->
     <string name="landing_login">LOGIN</string>
