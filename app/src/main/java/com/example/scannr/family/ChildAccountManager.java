@@ -69,7 +69,7 @@ public class ChildAccountManager extends AppCompatActivity implements View.OnCli
         FirebaseUser parentUser = mAuth.getCurrentUser();
         assert parentUser != null;
         String parentUID = parentUser.getUid();
-
+        String parentName = parentUser.getDisplayName();
         String fName = editFirstName.getText().toString().trim();
         String lName = editLastName.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
@@ -82,11 +82,12 @@ public class ChildAccountManager extends AppCompatActivity implements View.OnCli
         child.put("fName", fName);
         child.put("lName", lName);
         child.put("email", email);
-        child.put("isChild", true);
+        child.put("isParent", false);
         child.put("routingNumber", bRoutingNumber);
         child.put("accountNumber", bAccountNumber);
         child.put("spendingLimit", spendingLimit);
         child.put("parentUID", parentUID);
+        child.put("parentName", parentName);
 
         validateInput(fName, lName, email, password, bRoutingNumber, bAccountNumber, spendingLimit);
 

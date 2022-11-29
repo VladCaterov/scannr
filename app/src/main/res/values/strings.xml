@@ -86,5 +86,7 @@
     <string name="delete">DELETE</string>
     <string name="register_child_user">REGISTER CHILD USER</string>
     <string name="create_reward">CREATE REWARD</string>
+    <string name="list_of_all_family_members">LIST OF ALL FAMILY MEMBERS</string>
+    <string name="family_viewer">Family Viewer</string>
 
 </resources>

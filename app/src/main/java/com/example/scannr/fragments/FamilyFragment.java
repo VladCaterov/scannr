@@ -34,14 +34,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FamilyFragment extends Fragment {
-    ListView list;
 
-    Validation validate = new Validation();
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
     private FirebaseFirestore db;
 
-    ChildFamilyFragment childFamilyFragment = new ChildFamilyFragment();
 
     public FamilyFragment() {
 
@@ -56,15 +52,12 @@ public class FamilyFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (!MainActivity.isParent){
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, childFamilyFragment).commit();
-        }
-        else{
+
             setNumChildrenText();
             setChildUsers();
             Button addChildButton = requireView().findViewById(R.id.addChildButton);
             addChildButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), ChildAccountManager.class)));
-        }
+
     }
 
     private void setNumChildrenText() {

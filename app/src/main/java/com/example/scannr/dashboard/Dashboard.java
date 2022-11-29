@@ -3,6 +3,7 @@ package com.example.scannr.dashboard;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
+import com.example.scannr.MainActivity;
 import com.example.scannr.fragments.*;
 import com.example.scannr.R;
 //import com.example.scannr.family_manager.FamilyManager;
@@ -40,8 +41,10 @@ public class Dashboard extends AppCompatActivity implements NavigationBarView.On
     }
     HomeFragment homeFragment = new HomeFragment();
     RewardFragment rewardFragment = new RewardFragment();
+    ChildRewardFragment childRewardFragment = new ChildRewardFragment();
     CaptureFragment captureFragment = new CaptureFragment();
     FamilyFragment familyFragment = new FamilyFragment();
+    ChildFamilyFragment childFamilyFragment = new ChildFamilyFragment();
     SettingsFragment settingsFragment = new SettingsFragment();
 
     @Override
@@ -53,7 +56,12 @@ public class Dashboard extends AppCompatActivity implements NavigationBarView.On
                 return true;
 
             case R.id.rewards:
-                getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, rewardFragment).commit();
+                if(MainActivity.isParent){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, rewardFragment).commit();
+                }
+                else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, childRewardFragment).commit();
+                }
                 return true;
 
             case R.id.capture:
@@ -61,7 +69,12 @@ public class Dashboard extends AppCompatActivity implements NavigationBarView.On
                 return true;
 
             case R.id.family:
-                getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, familyFragment).commit();
+                if (MainActivity.isParent){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, familyFragment).commit();
+                }
+                else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.home_layout, childFamilyFragment).commit();
+                }
                 return true;
 
             case R.id.settings:
