@@ -2,13 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Scannr.NoActionBar"
         tools:targetApi="31">
@@ -24,6 +27,15 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+        <activity
+            android:name=".registration_login.LoginUser"
+            android:exported="true"
+            android:label="@string/title_activity_login_user">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
         </activity>
         <activity
             android:name=".registration_login.RegisterUser"
@@ -67,13 +79,30 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".family_manager.ChildAccountManager"
+            android:name=".receipt_manager.ReceiptManager"
             android:exported="false"
-            android:label="@string/title_activity_child_account_register"
+            android:label="@string/receipt_manager_title"
+                  
             android:theme="@style/Theme.Scannr.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+            <meta-data
+                android:name="com.google.mlkit.vision.DEPENDENCIES"
+                android:value="ocr" />
+        </activity>
+        <activity
+            android:name=".family_manager.ChildAccountManager"
+            android:exported="false"
+            android:label="@string/title_activity_child_account_register"
+
+            android:theme="@style/Theme.Scannr.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+            <meta-data
+                android:name="com.google.mlkit.vision.DEPENDENCIES"
+                android:value="ocr" />
         </activity>
     </application>
 

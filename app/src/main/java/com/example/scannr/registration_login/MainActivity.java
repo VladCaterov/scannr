@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 
@@ -32,152 +31,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_landing);
 
-        editEmail= findViewById(R.id.emailLogin);
-        editPassword= findViewById(R.id.passwordLogin);
+        Button login_button = findViewById(R.id.login_button);
+        login_button.setOnClickListener(this);
 
-        Button logIn = findViewById(R.id.buttonLogin);
-        logIn.setOnClickListener(this);
-
-        TextView register = findViewById(R.id.registerLogin);
-        register.setOnClickListener(this);
-
-        TextView forgotPassword = findViewById(R.id.forgotPasswordLogin);
-        forgotPassword.setOnClickListener(this);
-
+        Button register_button = findViewById(R.id.register_button);
+        register_button.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.buttonLogin:
-                userLogin();
+        switch(v.getId()) {
+            case R.id.login_button:
+                loginUserScreen();
                 break;
 
-            case R.id.registerLogin:
+            case R.id.register_button:
                 registerUserScreen();
                 break;
-
-            case R.id.forgotPasswordLogin:
-                forgotPassword();
-                break;
         }
     }
-    private void userLogin() {
-        mAuth= FirebaseAuth.getInstance();
 
-        String email = editEmail.getText().toString().trim();
-        String password = editPassword.getText().toString().trim();
-        //path validation
-        if (validate.isEmptyEmail(email)) {
-            editEmail.setError("Email is required!");
-            editEmail.requestFocus();
-            return;
-        }
-        if (!validate.validateEmail(email)) {
-            editEmail.setError("Please enter a valid email!");
-            editEmail.requestFocus();
-            return;
-        }
-        if (validate.isEmptyPassword(password)) {
-            editPassword.setError("Password required");
-            editPassword.requestFocus();
-            return;
-        }
-        if (validate.validatePassword(password)) {
-            editPassword.setError("Min password length is 6 char");
-            editPassword.requestFocus();
-            return;
-        }
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            // User is signed in
-            mAuth.signOut();
-        }
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
-                assert mAuth.getCurrentUser() != null;
-                if (mAuth.getCurrentUser().isEmailVerified()) {
-                    startActivity(new Intent(MainActivity.this, Dashboard.class));
-                } else {
-                    mAuth.getCurrentUser().sendEmailVerification();
-                    Toast.makeText(MainActivity.this, "Check your email to verify your account!",
-                            Toast.LENGTH_LONG).show();
-                    mAuth.signOut();
-                    overridePendingTransition(0, 0);
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(getIntent());
-                }
-            }
-            else
-            {
-                Toast.makeText(MainActivity.this,"Failed to login! Please check credentials",Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void registerUserScreen(){
+    private void registerUserScreen() {
         startActivity(new Intent(MainActivity.this,RegisterUser.class));
     }
-    private void forgotPassword(){
-        mAuth= FirebaseAuth.getInstance();
-
-        View view = getLayoutInflater().inflate(R.layout.dialog_forgot_password,null, true);
-        EditText emailToSend = view.findViewById(R.id.emailForgotPass);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Add the buttons
-        builder.setView(view)
-                .setPositiveButton(R.string.ok, (dialog, id) -> {
-                    String email = emailToSend.getText().toString().trim();
-
-                    // SEND FORGET PASSWORD EMAIL
-                    if (validate.isEmptyEmail(email)) {
-                        Toast.makeText(MainActivity.this, "Email Failed To Send:\nAn Email Is Required",
-                                Toast.LENGTH_LONG).show();
-                    }
-                    if (!validate.validateEmail(email)) {
-                        Toast.makeText(MainActivity.this, "Email Failed To Send:\nPlease Enter a Valid Email",
-                                Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        String message = "Check your " + email + " email to reset your password!";
-                        // QUERY IF EMAIL EXISTS IN SYSTEM
-                        db.collection("users")
-                                .whereEqualTo("email", email)
-                                .get()
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if (Objects.equals(document.getData().get("email"), email)){
-                                                mAuth.sendPasswordResetEmail(email);
-                                                Toast.makeText(MainActivity.this, message,Toast.LENGTH_LONG).show();
-                                                return;
-                                            }
-                                            Log.d(TAG, document.getId() + " => " + document.getData());
-                                        }
-                                        Toast.makeText(MainActivity.this, "No email found",Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Log.d(TAG, "Error getting documents: ", task.getException());
-                                    }
-                                });
-                    }
-
-                })
-                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
+    private void loginUserScreen() {
+        startActivity(new Intent(MainActivity.this,LoginUser.class));
     }
-
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "767734885013",
+    "project_id": "scannr-1e5b2",
+    "storage_bucket": "scannr-1e5b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767734885013:android:0f0861fe9208e52938899c",
+        "android_client_info": {
+          "package_name": "com.example.scannr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767734885013-a9il6o5pcbjghv180q7cn4fhuu00t3b2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFph3KpwQHEEPirDtjii934SXl86Tk7Xw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767734885013-a9il6o5pcbjghv180q7cn4fhuu00t3b2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

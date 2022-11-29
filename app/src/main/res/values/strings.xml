@@ -1,7 +1,15 @@
 <resources>
+    <!--app-->
     <string name="app_name">Scannr</string>
     <string name="register">Register</string>
     <string name="scannr_register">Register Now</string>
+
+    <!--Landing-->
+    <string name="landing_login">LOGIN</string>
+    <string name="landing_register">REGISTER</string>
+    <string name="landing_body">Collect receipts and redeem rewards while building healthy financial habits.</string>
+    <string name="landing_header">Receipt Rewards</string>
+    <string name="landing_title">scannr</string>
 
     <string name="forgot_password">Forgot Password</string>
     <string name="login">LOGIN</string>
@@ -17,6 +25,7 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_login_user">RegisterUser</string>
     <string name="title_activity_register_user">RegisterUser</string>
     <string name="first_name_input">First Name</string>
     <string name="last_name_input">Last Name</string>
@@ -44,10 +53,35 @@
     <string name="NoChildAccounts">NO CHILD ACCOUNTS</string>
     <string name="title_activity_child_account_register">Register Child Account</string>
     <string name="scannr_register_child">Register Child</string>
+
+    <string name="title">title</string>
+    <string name="header">header</string>
+    <string name="body">body</string>
+
+    <!--Receipt Manager-->
+    <string name="receipt_manager_title">Receipt Manager</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="BankRoutingNumber">Bank Routing Number</string>
     <string name="BankAccountNumber">Bank Account Number</string>
     <string name="SpendingLimit">Spending Limit</string>
     <string name="registerChild">REGISTER CHILD</string>
     <string name="update">UPDATE</string>
     <string name="delete">DELETE</string>
+
 </resources>
