@@ -28,8 +28,8 @@ import java.util.Objects;
 
 public class LoginUser extends AppCompatActivity implements View.OnClickListener {
     Validation validate = new Validation();
-    private EditText editEmail, editPassword, emailToSend;
-    private TextView register, forgotPassword;
+    private EditText editEmail, editPassword;
+    private TextView forgotPassword;
     private Button logIn;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -46,9 +46,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         logIn = findViewById(R.id.buttonLogin);
         logIn.setOnClickListener(this);
 
-        register = findViewById(R.id.registerLogin);
-        register.setOnClickListener(this);
-
         forgotPassword = findViewById(R.id.forgotPasswordLogin);
         forgotPassword.setOnClickListener(this);
 
@@ -59,9 +56,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         switch(v.getId()){
             case R.id.buttonLogin:
                 userLogin();
-                break;
-            case R.id.registerLogin:
-                registerUserScreen();
                 break;
             case R.id.forgotPasswordLogin:
                 forgotPassword();
@@ -102,19 +96,21 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 assert mAuth.getCurrentUser() != null;
-                if (mAuth.getCurrentUser().isEmailVerified()) {
-                    startActivity(new Intent(LoginUser.this, Dashboard.class));
-                } else {
-                    mAuth.getCurrentUser().sendEmailVerification();
-                    Toast.makeText(LoginUser.this, "Check your email to verify your account!",
-                            Toast.LENGTH_LONG).show();
-                    mAuth.signOut();
-                    overridePendingTransition(0, 0);
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(getIntent());
+                startActivity(new Intent(LoginUser.this, Dashboard.class));
+//               TODO: IF NEED BE, IMPLEMENT VERIFYING EMAIL
+//
+//                if (mAuth.getCurrentUser().isEmailVerified()) {
+//                      startActivity(new Intent(LoginUser.this, Dashboard.class));
+//                } else {
+//                    mAuth.getCurrentUser().sendEmailVerification();
+//                    Toast.makeText(LoginUser.this, "Check your email to verify your account!",
+//                            Toast.LENGTH_LONG).show();
+//                    mAuth.signOut();
+//                    overridePendingTransition(0, 0);
+//                    finish();
+//                    overridePendingTransition(0, 0);
+//                    startActivity(getIntent());
                 }
-            }
             else
             {
                 Toast.makeText(LoginUser.this,"Failed to login! Please check credentials",Toast.LENGTH_LONG).show();
@@ -122,9 +118,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         });
     }
 
-    private void registerUserScreen(){
-        startActivity(new Intent(LoginUser.this,RegisterUser.class));
-    }
     private void forgotPassword(){
         mAuth= FirebaseAuth.getInstance();
 

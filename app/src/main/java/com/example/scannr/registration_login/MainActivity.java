@@ -25,11 +25,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Validation validate = new Validation();
-    private EditText editEmail;
-    private EditText editPassword;
-    private FirebaseAuth mAuth;
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

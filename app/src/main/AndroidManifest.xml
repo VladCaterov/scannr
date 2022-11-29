@@ -82,7 +82,7 @@
             android:name=".receipt_manager.ReceiptManager"
             android:exported="false"
             android:label="@string/receipt_manager_title"
-                  
+
             android:theme="@style/Theme.Scannr.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
