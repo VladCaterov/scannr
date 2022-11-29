@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|top"
         android:contentDescription="@string/backButton"
-        android:src="@drawable/back_arrow"
+        android:src="@drawable/back_arrow_icon"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/purple_500"/>
+        android:backgroundTint="@color/primary"/>
 
     <TextView
         android:id="@+id/scannr"

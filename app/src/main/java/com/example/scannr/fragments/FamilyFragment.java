@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,18 +16,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.scannr.MainActivity;
 import com.example.scannr.R;
-import com.example.scannr.authentication.RegisterUser;
 import com.example.scannr.authentication.Validation;
 import com.example.scannr.family.ChildAccountManager;
-import com.example.scannr.family.FamilyListItemAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.scannr.family.FamilyListChildAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
@@ -37,7 +32,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.prefs.BackingStoreException;
 
 public class FamilyFragment extends Fragment {
     ListView list;
@@ -100,12 +94,17 @@ public class FamilyFragment extends Fragment {
                 });
     }
     private void setChildUsers(){
-        ListView childList = requireActivity().findViewById(R.id.childrenListView);
-        ArrayList<String> arrayList = new ArrayList<>();
-        FamilyListItemAdapter childListItemAdapter = new FamilyListItemAdapter(getActivity(), arrayList)  ;
-        childList.setAdapter(childListItemAdapter);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        ListView childList = requireActivity().findViewById(R.id.childrenListView);
+        ArrayList<String> arrayListFirstNames = new ArrayList<>();
+        ArrayList<String> arrayListLastNames = new ArrayList<>();
+
+        ArrayList<String> childIDS = new ArrayList<>();
+
+        FamilyListChildAdapter childListItemAdapter = new FamilyListChildAdapter(getActivity(), arrayListFirstNames, arrayListLastNames, childIDS)  ;
+        childList.setAdapter(childListItemAdapter);
+
         CollectionReference usersRef = db.collection("users");
         usersRef
             .whereEqualTo("parentUID", mAuth.getUid())
@@ -116,8 +115,9 @@ public class FamilyFragment extends Fragment {
                     for(DocumentSnapshot documentSnapshot : task.getResult()){
                         String fName = documentSnapshot.getString("fName");
                         String lName = documentSnapshot.getString("lName");
-                        name = fName + lName;
-                        arrayList.add(name);
+                        childIDS.add(documentSnapshot.getId());
+                        arrayListFirstNames.add(fName);
+                        arrayListLastNames.add(lName);
                         childListItemAdapter.notifyDataSetChanged();
                     }
                 }

@@ -121,6 +121,7 @@ public class ChildAccountManager extends AppCompatActivity implements View.OnCli
                     } else {
                         Toast.makeText(ChildAccountManager.this, "Unable to create child.",
                                 Toast.LENGTH_SHORT).show();
+
                     }
                 });
 

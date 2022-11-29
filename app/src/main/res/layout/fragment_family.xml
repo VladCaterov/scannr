@@ -44,11 +44,12 @@
 
     <ListView
         android:id="@+id/childrenListView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="410dp"
+        android:layout_height="363dp"
+        app:layout_constraintBottom_toTopOf="@+id/addChildButtonLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintBottom_toTopOf="@+id/addChildButtonLayout"/>
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:id="@+id/addChildButtonLayout"
