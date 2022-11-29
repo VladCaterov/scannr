@@ -110,32 +110,31 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         }
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                startActivity(new Intent(LoginUser.this, Dashboard.class));
-                db.collection("users")
-                        .document(mAuth.getUid())
-                        .get()
-                        .addOnSuccessListener(documentSnapshot -> {
-                            try {
-                                MainActivity.isParent = (boolean) documentSnapshot.get("isParent");
-                                Log.d(TAG, "isParent: " + MainActivity.isParent);
-                            } catch (Exception e){
-                                System.out.println(e);
-                            }
-                        });
-//               TODO: IF NEED BE, IMPLEMENT VERIFYING EMAIL
-//
-//                if (mAuth.getCurrentUser().isEmailVerified()) {
-//                      startActivity(new Intent(LoginUser.this, Dashboard.class));
-//                } else {
-//                    mAuth.getCurrentUser().sendEmailVerification();
-//                    Toast.makeText(LoginUser.this, "Check your email to verify your account!",
-//                            Toast.LENGTH_LONG).show();
-//                    mAuth.signOut();
-//                    overridePendingTransition(0, 0);
-//                    finish();
-//                    overridePendingTransition(0, 0);
-//                    startActivity(getIntent());
+                if (mAuth.getCurrentUser().isEmailVerified()) {
+
+                    startActivity(new Intent(LoginUser.this, Dashboard.class));
+                    db.collection("users")
+                            .document(mAuth.getUid())
+                            .get()
+                            .addOnSuccessListener(documentSnapshot -> {
+                                try {
+                                    MainActivity.isParent = (boolean) documentSnapshot.get("isParent");
+                                    Log.d(TAG, "isParent: " + MainActivity.isParent);
+                                } catch (Exception e) {
+                                    System.out.println(e);
+                                }
+                            });
+                } else {
+                    mAuth.getCurrentUser().sendEmailVerification();
+                    Toast.makeText(LoginUser.this, "Check your email to verify your account!",
+                            Toast.LENGTH_LONG).show();
+                    mAuth.signOut();
+                    overridePendingTransition(0, 0);
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
                 }
+            }
             else
             {
                 Toast.makeText(LoginUser.this,"Failed to login! Please check credentials",Toast.LENGTH_LONG).show();
