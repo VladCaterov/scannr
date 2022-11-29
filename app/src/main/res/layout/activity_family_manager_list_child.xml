@@ -5,9 +5,9 @@
     android:id="@+id/childLinearLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".family_manager.FamilyManager"
     android:orientation="horizontal"
     android:layout_gravity="center">
+    <!--tools:context=".family_manager.FamilyManager"-->
 
     <TextView
         android:id="@+id/childName"

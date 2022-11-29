@@ -1,42 +1,25 @@
 package com.example.scannr.dashboard;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.scannr.HomeFragment;
-import com.example.scannr.RewardFragment;
-import com.example.scannr.CaptureFragment;
-import com.example.scannr.FamilyFragment;
-import com.example.scannr.SettingsFragment;
+import com.example.scannr.fragments.*;
 import com.example.scannr.R;
-import com.example.scannr.family_manager.FamilyManager;
-import com.example.scannr.notifications.Notifications;
-import com.example.scannr.purchase_history_manager.PurchaseHistoryManager;
-import com.example.scannr.receipt_manager.ReceiptManager;
-import com.example.scannr.registration_login.MainActivity;
-import com.example.scannr.rewards.Rewards;
-import com.example.scannr.settings.Settings;
+//import com.example.scannr.family_manager.FamilyManager;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.*;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.os.Bundle;
+
 import android.view.MenuItem;
 
 public class Dashboard extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener  {
@@ -47,7 +30,7 @@ public class Dashboard extends AppCompatActivity implements NavigationBarView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_dashboard);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 

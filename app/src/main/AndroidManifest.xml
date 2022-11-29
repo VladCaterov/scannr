@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Scannr.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".registration_login.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".registration_login.LoginUser"
+            android:name=".authentication.LoginUser"
             android:exported="true"
             android:label="@string/title_activity_login_user">
             <meta-data
@@ -38,20 +38,13 @@
 
         </activity>
         <activity
-            android:name=".registration_login.RegisterUser"
+            android:name=".authentication.RegisterUser"
             android:exported="true"
             android:label="@string/title_activity_register_user">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
 
-        </activity>
-        <activity
-            android:name=".rewards.Rewards"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
         <activity
             android:name=".settings.Settings"
@@ -70,16 +63,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".family_manager.FamilyManager"
-            android:exported="false"
-            android:label="@string/title_activity_family_manager"
-            android:theme="@style/Theme.Scannr.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".receipt_manager.ReceiptManager"
+            android:name=".receipts.ReceiptManager"
             android:exported="false"
             android:label="@string/receipt_manager_title"
 
@@ -92,7 +76,7 @@
                 android:value="ocr" />
         </activity>
         <activity
-            android:name=".family_manager.ChildAccountManager"
+            android:name=".family.ChildAccountManager"
             android:exported="false"
             android:label="@string/title_activity_child_account_register"
 
