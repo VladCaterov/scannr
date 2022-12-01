@@ -53,7 +53,6 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
         this.childIDArray = childIDs;
         this.firstName = firstNames;
         this.lastName = lastNames;
-
     }
 
 

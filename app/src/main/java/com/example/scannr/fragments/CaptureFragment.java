@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -33,11 +35,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.scannr.R;
 import com.example.scannr.family.ChildAccountManager;
+import com.example.scannr.receipts.PurchaseHistoryManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -46,6 +51,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.StringTokenizer;
 
 public class CaptureFragment<textRecognizer> extends Fragment {
@@ -121,22 +127,22 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         });
     }
 
-    private void sortContents(String text) {
+    private void sortContents(String text) { // TODO: move to PHM
         String[] cache = new String[3];
         Arrays.fill(cache, "0");
         cache[1] = "2022.11.29"; // TODO: REMOVE
         cache[2] = "2.09"; // TODO: REMOVE
         ArrayList<Float> moneyList = new ArrayList<>();
 
-        StringTokenizer st = new StringTokenizer(text);
+        StringTokenizer st = new StringTokenizer(text.trim());
         while (st.hasMoreTokens()) { // We need 3 things: Business name (0), Date (1), Receipt Total (2)
             String currToken = st.nextToken();
             if (currToken.contains("Texas") || currToken.contains("BON")) { // Business name
                 cache[0] = currToken;
-            } else if (currToken.contains("/") || currToken.contains("-")) { // Date
+            } else if (currToken.contains("/") || currToken.contains("-") && (currToken.matches(".*/.*/.*") || currToken.matches(".*-.*-.*"))) { // Date
                 cache[1] = currToken;
-            } else if (currToken.contains("$") && currToken.matches("[-+]?[0-9]*\\.?[0-9]+")) { // Receipt Total (with $)
-                moneyList.add(Float.parseFloat(currToken.substring(1)));
+            } else if ((currToken.contains("$") || currToken.contains(".")) && currToken.replaceAll("[^\\d.]", "").matches("[-+]?[0-9]*\\.?[0-9]+")) { // Receipt Total (with $)
+                moneyList.add(Float.parseFloat(currToken.replaceAll("[^\\d.]", "")));
             }
 //            else if (currToken.contains(".")) {// (with .)
 //                // TODO: Handle decimals
@@ -159,16 +165,42 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         }
 
         // alert dialog builder to show business name, date, and total
+        final EditText bNameOutputField = new EditText(getActivity());
+        final EditText dateField = new EditText(getActivity());
+        final EditText totalField = new EditText(getActivity());
+        bNameOutputField.setText(cache[0]);
+        dateField.setText(cache[1]);
+        totalField.setText(cache[2]);
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.addView(bNameOutputField);
+        linearLayout.addView(dateField);
+        linearLayout.addView(totalField);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Receipt Information");
-        builder.setMessage("Business Name: " + cache[0] + "\nDate: " + cache[1] + "\nTotal: " + cache[2]);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+//        builder.setMessage("Business Name: " + cache[0] + "\nDate: " + cache[1] + "\nTotal: " + cache[2]);
+        builder.setView(linearLayout);
+        builder.setPositiveButton("Save", (dialog, id) -> {
+            cache[0] = bNameOutputField.getText().toString();
+            cache[1] = dateField.getText().toString();
+            cache[2] = totalField.getText().toString();
         });
+        builder.setCancelable(true);
+        builder.setNegativeButton("Cancel",
+                (dialog, id) -> dialog.cancel());
         builder.create().show();
+
+        // add to PHM
+        try {
+            PurchaseHistoryManager.addReceipt(cache[0], cache[1], Float.parseFloat(cache[2]));
+            Toast.makeText(getActivity(), "Receipt added successfully", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "addReceipt: Error adding document" + e);
+            Toast.makeText(getActivity(), "Error adding receipt", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void recognizeTextFromImage() {
