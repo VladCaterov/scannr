@@ -10,11 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.scannr.R;
 import com.example.scannr.authentication.Validation;
 import com.example.scannr.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -64,6 +69,7 @@ public class ChildAccountManager extends AppCompatActivity implements View.OnCli
     }
 
     private void registerChildUser(){
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser parentUser = mAuth.getCurrentUser();
@@ -125,9 +131,6 @@ public class ChildAccountManager extends AppCompatActivity implements View.OnCli
 
                     }
                 });
-
-
-
     }
 
     private void validateInput(String fName, String lName, String email, String password,

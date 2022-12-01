@@ -13,12 +13,12 @@ import java.util.ArrayList;
 
 public class FamilyListMemberAdapter extends ArrayAdapter<String> {
 private final Activity context;
-private final ArrayList<String> name;
+private final ArrayList<String> nameArray;
 
 public FamilyListMemberAdapter(Activity context, ArrayList<String> firstNames) {
         super(context, R.layout.activity_family_manager_list_child, firstNames);
         this.context = context;
-        this.name = firstNames;
+        this.nameArray = firstNames;
 
         }
 
@@ -28,7 +28,7 @@ public View getView(int position, View convertView, ViewGroup container) {
         View rowView = inflater.inflate(R.layout.activity_family_manager_list_member, null, true);
 
         TextView parentName = rowView.findViewById(R.id.memberTextView);
-        parentName.setText(name.get(position));
+        parentName.setText(nameArray.get(position));
 
         return rowView;
 

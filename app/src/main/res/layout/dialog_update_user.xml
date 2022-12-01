@@ -16,55 +16,6 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/fNameUpdateChild"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="First Name"
-        android:inputType="text"
-        android:minHeight="48dp" />
-
-    <EditText
-        android:id="@+id/lNameUpdateChild"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="Last Name"
-        android:inputType="text"
-        android:minHeight="48dp" />
-    <EditText
-        android:id="@+id/emailUpdateChild"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:minHeight="48dp" />
-    <EditText
-        android:id="@+id/passwordUpdateChild"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:minHeight="48dp"/>
-    <EditText
         android:id="@+id/bankRoutingNumberUpdateChild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

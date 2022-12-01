@@ -39,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.zip.Inflater;
 
 public class FamilyListChildAdapter extends ArrayAdapter<String> {
     private final Activity context;
@@ -64,78 +65,41 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
         Button update =  rowView.findViewById(R.id.updateChild);
 
         delete.setOnClickListener(v -> deleteChildUser(childIDArray, position));
+        update.setOnClickListener(v -> updateChildUser(inflater, position));
 
-        update.setOnClickListener(v -> {
-            View view = inflater.inflate(R.layout.dialog_update_user,null, true);
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-            // Add the buttons
-            builder.setView(view)
-                    .setPositiveButton(R.string.ok, (dialog, id) -> {
-                        EditText editFirstName, editLastName, editEmail, editPassword, editBankRoutingNumber,
-                                editBankAccountNumber, editSpendingLimit;
-                        editFirstName = view.findViewById(R.id.fNameUpdateChild);
-                        editLastName = view.findViewById(R.id.lNameUpdateChild);
-                        editEmail=  view.findViewById(R.id.emailUpdateChild);
-                        editPassword= view.findViewById(R.id.passwordUpdateChild);
-                        editBankRoutingNumber = view.findViewById(R.id.bankRoutingNumberUpdateChild);
-                        editBankAccountNumber = view.findViewById(R.id.bankAccountNumberUpdateChild);
-                        editSpendingLimit = view.findViewById(R.id.spendingLimitUpdateChild);
-                        boolean valid = validateInput(editFirstName,editLastName,editEmail,editPassword,editBankRoutingNumber,editBankAccountNumber,editSpendingLimit);
-                        if(valid){
-                            Toast.makeText(context, "DEMO UPDATE USER SUCCESSFULLY", Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-        });
         TextView fName = rowView.findViewById(R.id.firstNameChild);
         fName.setText(firstName.get(position));
         TextView lName = rowView.findViewById(R.id.lastNameChild);
         lName.setText(lastName.get(position));
         return rowView;
     }
-    private boolean validateInput(EditText fName, EditText lName, EditText email, EditText password,
-                               EditText bRoutingNumber, EditText bAccountNumber, EditText spendingLimit){
+    private boolean validateInput(EditText bRoutingNumber, EditText bAccountNumber, EditText spendingLimit){
         Validation validate = new Validation();
 
-        if (validate.isEmptyFirstName(fName.getText().toString())) {
-            Toast.makeText(context, "First Name is Required",
-                    Toast.LENGTH_SHORT).show();
-        return false;
-        }
-        if (validate.isEmptyLastName(lName.getText().toString())) {
-            Toast.makeText(context, "Last Name is Required",
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (validate.isEmptyEmail(email.getText().toString())) {
-            Toast.makeText(context, "Email is Required",
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!validate.validateEmail(email.getText().toString())) {
-            Toast.makeText(context, "Please Enter A Valid Email",
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (validate.isEmptyPassword(password.getText().toString())) {
-            Toast.makeText(context, "Password is Required",
-                    Toast.LENGTH_SHORT).show();
-            password.setError("Password required!");
-            password.requestFocus();
-            return false;
-        }
-        if (validate.validatePassword(password.getText().toString())) {
-            Toast.makeText(context, "Please Enter a Valid Password",
-                    Toast.LENGTH_SHORT).show();
-            password.setError("Min password length is 6 char!");
-            password.requestFocus();
-            return false;
-        }
+//        if (validate.isEmptyFirstName(fName.getText().toString())) {
+////            Toast.makeText(context, "First Name is Required",
+////                    Toast.LENGTH_SHORT).show();
+//            fName.setError("First Name is Required");
+//            fName.requestFocus();
+//            return false;
+//        }
+//        if (validate.isEmptyLastName(lName.getText().toString())) {
+////            Toast.makeText(context, "Last Name is Required",
+////                    Toast.LENGTH_SHORT).show();
+//            lName.setError("Last Name is Required");
+//            lName.requestFocus();
+//            return false;
+//        }
+//        if (validate.isEmptyEmail(email.getText().toString())) {
+////            Toast.makeText(context, "Email is Required",
+////                    Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//        if (!validate.validateEmail(email.getText().toString())) {
+////            Toast.makeText(context, "Please Enter A Valid Email",
+////                    Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
         if (validate.isEmptyBankAccountNumber(bAccountNumber.getText().toString())){
             Toast.makeText(context, "Bank account number required!",
                     Toast.LENGTH_SHORT).show();
@@ -165,6 +129,53 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
             return false;
         }
         return true;
+    }
+
+    private void updateChildUser(LayoutInflater inflater, int position){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRefChild = db.collection("users").document(childIDArray.get(position));
+        View view = inflater.inflate(R.layout.dialog_update_user,null, true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        EditText eBankRoutingNumber, eBankAccountNumber, eSpendingLimit;
+
+        eBankRoutingNumber = view.findViewById(R.id.bankRoutingNumberUpdateChild);
+        eBankAccountNumber = view.findViewById(R.id.bankAccountNumberUpdateChild);
+        eSpendingLimit = view.findViewById(R.id.spendingLimitUpdateChild);
+        docRefChild.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                eBankRoutingNumber.setText(documentSnapshot.get("routingNumber").toString());
+                eBankAccountNumber.setText(documentSnapshot.get("accountNumber").toString());
+                eSpendingLimit.setText(documentSnapshot.get("spendingLimit").toString());
+            }
+        });
+
+        // Add the buttons
+        builder.setView(view)
+                .setPositiveButton(R.string.ok, (dialog, id) -> {
+                    EditText editBankRoutingNumber, editBankAccountNumber, editSpendingLimit;
+
+                    editBankRoutingNumber = view.findViewById(R.id.bankRoutingNumberUpdateChild);
+                    editBankAccountNumber = view.findViewById(R.id.bankAccountNumberUpdateChild);
+                    editSpendingLimit = view.findViewById(R.id.spendingLimitUpdateChild);
+                    boolean valid = validateInput(editBankRoutingNumber,editBankAccountNumber,editSpendingLimit);
+                    if(valid){
+                        docRefChild.update("routingNumber", editBankRoutingNumber.getText().toString());
+                        docRefChild.update("accountNumber", editBankAccountNumber.getText().toString());
+                        docRefChild.update("spendingLimit", editSpendingLimit.getText().toString());
+
+                        Toast.makeText(context, "DEMO UPDATE USER SUCCESSFULLY", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(context, "DEMO FAILED TO UPDATE USER", Toast.LENGTH_LONG).show();
+                    }
+
+                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
+
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     private void deleteChildUser(ArrayList<String> childIDs, int position){
