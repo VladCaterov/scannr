@@ -129,15 +129,15 @@ public class CaptureFragment<textRecognizer> extends Fragment {
 
     private void sortContents(String text) { // TODO: move to PHM
         String[] cache = new String[3];
-        Arrays.fill(cache, "0");
-        cache[1] = "2022.11.29"; // TODO: REMOVE
-        cache[2] = "2.09"; // TODO: REMOVE
+        Arrays.fill(cache, "");
+//        cache[1] = "2022.11.29"; // TODO: REMOVE
+//        cache[2] = "2.09"; // TODO: REMOVE
         ArrayList<Float> moneyList = new ArrayList<>();
 
         StringTokenizer st = new StringTokenizer(text.trim());
         while (st.hasMoreTokens()) { // We need 3 things: Business name (0), Date (1), Receipt Total (2)
             String currToken = st.nextToken();
-            if (currToken.contains("Texas") || currToken.contains("BON")) { // Business name
+            if (currToken.contains("University") || currToken.contains("BON") || currToken.contains("Walmart")) { // Business name
                 cache[0] = currToken;
             } else if (currToken.contains("/") || currToken.contains("-") && (currToken.matches(".*/.*/.*") || currToken.matches(".*-.*-.*"))) { // Date
                 cache[1] = currToken;
@@ -172,6 +172,11 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         dateField.setText(cache[1]);
         totalField.setText(cache[2]);
 
+        // add hints
+        bNameOutputField.setHint("Business Name");
+        dateField.setHint("Date");
+        totalField.setHint("Receipt Total");
+
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(bNameOutputField);
@@ -186,21 +191,20 @@ public class CaptureFragment<textRecognizer> extends Fragment {
             cache[0] = bNameOutputField.getText().toString();
             cache[1] = dateField.getText().toString();
             cache[2] = totalField.getText().toString();
+
+            // add to PHM
+            try {
+                PurchaseHistoryManager.addReceipt(cache[0], cache[1], Float.parseFloat(cache[2]));
+                Toast.makeText(getActivity(), "Receipt added successfully", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Log.e(TAG, "addReceipt: Error adding document" + e);
+                Toast.makeText(getActivity(), "Error adding receipt", Toast.LENGTH_SHORT).show();
+            }
         });
         builder.setCancelable(true);
         builder.setNegativeButton("Cancel",
                 (dialog, id) -> dialog.cancel());
         builder.create().show();
-
-        // add to PHM
-        try {
-            PurchaseHistoryManager.addReceipt(cache[0], cache[1], Float.parseFloat(cache[2]));
-            Toast.makeText(getActivity(), "Receipt added successfully", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e(TAG, "addReceipt: Error adding document" + e);
-            Toast.makeText(getActivity(), "Error adding receipt", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     private void recognizeTextFromImage() {

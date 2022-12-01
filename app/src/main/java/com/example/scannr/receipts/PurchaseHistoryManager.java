@@ -7,6 +7,7 @@ import com.example.scannr.authentication.RegisterUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,10 +20,13 @@ public class PurchaseHistoryManager {
 
     public static Map<String, Object> createReceipt(String userId, String businessName, String date, Float receiptTotal) {
         Map<String, Object> receipt = new HashMap<>();
-        receipt.put("currentUID", userId);
+        receipt.put("userId", userId);
         receipt.put("businessName", businessName);
         receipt.put("date", date);
-        receipt.put("receiptTotal", receiptTotal);
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        receipt.put("receiptTotal", df.format(receiptTotal));
         return receipt;
     }
 
