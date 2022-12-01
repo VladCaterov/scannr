@@ -4,61 +4,43 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" >
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="6dip"
-        android:contentDescription="TODO"/>
-
     <TextView
         android:id="@+id/totalAmount"
-        android:layout_width="75dp"
-        android:layout_height="20dp"
-        android:layout_alignBottom="@+id/businessName"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="325dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="0dp"
-        android:ellipsize="marquee"
-        android:singleLine="true"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/date"
+        android:gravity="bottom"
         android:text="Amount"
-        android:textAlignment="center"
-        android:textSize="12sp" />
+        android:textAlignment="textStart"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="75dp"
-        android:layout_height="20dp"
-        android:layout_alignTop="@+id/businessName"
+        android:layout_height="match_parent"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="325dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="6dp"
-        android:ellipsize="marquee"
-        android:singleLine="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
         android:text="Date"
-        android:textAlignment="center"
-        android:textSize="12sp" />
+        android:textAlignment="viewStart"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/businessName"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignWithParentIfMissing="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="6dp"
-        android:gravity="center_vertical"
+        android:layout_toStartOf="@+id/totalAmount"
+        android:gravity="bottom"
         android:text="Receipt Business Name"
         android:textSize="16sp" />
 

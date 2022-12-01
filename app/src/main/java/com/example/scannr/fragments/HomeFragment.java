@@ -43,8 +43,11 @@ public class HomeFragment extends ListFragment {
 
             ArrayList<String> businessList = new ArrayList<>();
             ArrayList<String> dateList = new ArrayList<>();
-            ArrayList<Float> totalList = new ArrayList<>();
+            ArrayList<String> totalList = new ArrayList<>();
 
+
+            ReceiptAdapter adapter = new ReceiptAdapter(getActivity(), businessList, dateList, totalList);
+            receiptView.setAdapter(adapter);
 
             // check database for "receipts" with userId of current user
             db.collection("receipts")
@@ -54,14 +57,10 @@ public class HomeFragment extends ListFragment {
                         for (int i = 0; i < receipt.getResult().size(); i++) {
                             businessList.add(receipt.getResult().getDocuments().get(i).get("businessName").toString());
                             dateList.add(receipt.getResult().getDocuments().get(i).get("date").toString());
-                            totalList.add(Float.valueOf(receipt.getResult().getDocuments().get(i).get("receiptTotal").toString()));
+                            totalList.add("$" + receipt.getResult().getDocuments().get(i).get("receiptTotal").toString());
+                            adapter.notifyDataSetChanged();
                         }
                     });
-
-
-            ReceiptAdapter adapter = new ReceiptAdapter(getActivity(), businessList, dateList, totalList);
-            receiptView.setAdapter(adapter);
-
 
 
         //calculate total from receiptTotal in receipts from database

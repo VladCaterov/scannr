@@ -19,9 +19,9 @@ public class ReceiptAdapter extends ArrayAdapter<String> {
     private final Activity context;
     private final ArrayList<String> businessList;
     private final ArrayList<String> dateList;
-    private final ArrayList<Float> totalList;
+    private final ArrayList<String> totalList;
 
-    public ReceiptAdapter(Activity context, ArrayList<String> businessNames, ArrayList<String> dates, ArrayList<Float> receiptTotal) {
+    public ReceiptAdapter(Activity context, ArrayList<String> businessNames, ArrayList<String> dates, ArrayList<String> receiptTotal) {
         super(context, R.layout.activity_receipt_list_item, businessNames);
         this.context = context;
         this.businessList = businessNames;
@@ -33,9 +33,9 @@ public class ReceiptAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = context.getLayoutInflater().inflate(R.layout.activity_receipt_list_item, parent, true);
+            convertView = context.getLayoutInflater().inflate(R.layout.activity_receipt_list_item, null, true);
         }
-
+        System.out.println();
 //        LayoutInflater inflater = context.getLayoutInflater();
 
 //        View rowView = inflater.inflate(R.layout.activity_receipt_list_item, null, true);
@@ -45,13 +45,10 @@ public class ReceiptAdapter extends ArrayAdapter<String> {
         TextView dateView = (TextView) convertView.findViewById(R.id.date);
         TextView totalView = (TextView) convertView.findViewById(R.id.totalAmount);
 
-        //print out businessList
-        System.out.println("lmao: " + businessList);
-
         // Populate data
         businessNameView.setText(businessList.get(position));
         dateView.setText(dateList.get(position));
-        totalView.setText(totalList.get(position).toString());
+        totalView.setText(totalList.get(position));
 
         return convertView;
     }
