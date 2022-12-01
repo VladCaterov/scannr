@@ -94,7 +94,6 @@ public class FamilyFragment extends Fragment {
         ArrayList<String> arrayListLastNames = new ArrayList<>();
 
         ArrayList<String> childIDS = new ArrayList<>();
-
         FamilyListChildAdapter childListItemAdapter = new FamilyListChildAdapter(getActivity(), arrayListFirstNames, arrayListLastNames, childIDS)  ;
         childList.setAdapter(childListItemAdapter);
 
@@ -104,7 +103,6 @@ public class FamilyFragment extends Fragment {
             .get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
-                    String name;
                     for(DocumentSnapshot documentSnapshot : task.getResult()){
                         String fName = documentSnapshot.getString("fName");
                         String lName = documentSnapshot.getString("lName");

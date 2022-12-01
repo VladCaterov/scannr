@@ -16,15 +16,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.scannr.MainActivity;
 import com.example.scannr.R;
 import com.example.scannr.authentication.LoginUser;
 import com.example.scannr.authentication.RegisterUser;
 import com.example.scannr.authentication.Validation;
 import com.example.scannr.rewards.CreateRewardForm;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,11 +45,11 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
     private final ArrayList<String> firstName;
     private final ArrayList<String> lastName;
 
-    private final ArrayList<String> childID;
+    private final ArrayList<String> childIDArray;
     public FamilyListChildAdapter(Activity context, ArrayList<String> firstNames, ArrayList<String> lastNames, ArrayList<String> childIDs) {
         super(context, R.layout.activity_family_manager_list_child, firstNames);
         this.context = context;
-        this.childID = childIDs;
+        this.childIDArray = childIDs;
         this.firstName = firstNames;
         this.lastName = lastNames;
 
@@ -52,8 +63,7 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
         Button delete =  rowView.findViewById(R.id.deleteChild);
         Button update =  rowView.findViewById(R.id.updateChild);
 
-        delete.setOnClickListener(v -> Toast.makeText(context, "DEMO: DELETE CHILD - " + childID.get(position),
-                Toast.LENGTH_SHORT).show());
+        delete.setOnClickListener(v -> deleteChildUser(childIDArray, position));
 
         update.setOnClickListener(v -> {
             View view = inflater.inflate(R.layout.dialog_update_user,null, true);
@@ -87,12 +97,6 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
         TextView lName = rowView.findViewById(R.id.lastNameChild);
         lName.setText(lastName.get(position));
         return rowView;
-
-////        LayoutInflater inflater = (L    ayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-//        if (convertView == null) {
-////            convertView = getLayoutInflater().inflate(R.layout.list_item, container, false);
-//        }
-//        return convertView;
     }
     private boolean validateInput(EditText fName, EditText lName, EditText email, EditText password,
                                EditText bRoutingNumber, EditText bAccountNumber, EditText spendingLimit){
@@ -161,5 +165,57 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
             return false;
         }
         return true;
+    }
+
+    private void deleteChildUser(ArrayList<String> childIDs, int position){
+        String childID = childIDs.get(position);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference currentUsers = db.collection("users");
+        CollectionReference deletedUsers = db.collection("deletedUsers");
+
+        DocumentReference docRefParent = currentUsers.document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+        //DELETE THE CHILD FROM USER DATABASE
+        moveFirestoreDocument(currentUsers.document(childID), deletedUsers.document(childID));
+        //DELETE THE CHILD REFERENCE FROM PARENT
+        currentUsers.document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        docRefParent.update("children", FieldValue.arrayRemove(childID));
+                        docRefParent.update("numChildren", FieldValue.increment(-1));
+                        Toast.makeText(context, "Deleted child " + childID + " user successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Unable to delete child user", Toast.LENGTH_SHORT).show();
+                    }
+                });
+//        Intent intent = context.getIntent();
+//        context.finish();
+//        context.startActivity(new Intent(intent));
+    }
+
+    //
+    //USED: https://stackoverflow.com/questions/47244403/how-to-move-a-document-in-cloud-firestore
+    public void moveFirestoreDocument(DocumentReference fromPath, final DocumentReference toPath) {
+        fromPath.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null) {
+                    toPath.set(document.getData())
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d(TAG, "DocumentSnapshot successfully written!");
+                                fromPath.delete()
+                                        .addOnSuccessListener(aVoid1 -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
+                                        .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+                            })
+                            .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
     }
 }

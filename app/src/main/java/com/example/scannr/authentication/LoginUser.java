@@ -2,6 +2,7 @@ package com.example.scannr.authentication;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -18,13 +19,17 @@ import com.example.scannr.MainActivity;
 import com.example.scannr.R;
 import com.example.scannr.dashboard.Dashboard;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
@@ -109,31 +114,80 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             mAuth.signOut();
         }
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
-                if (mAuth.getCurrentUser().isEmailVerified()) {
+            FirebaseUser user1 = mAuth.getCurrentUser();
 
-                    startActivity(new Intent(LoginUser.this, Dashboard.class));
-                    db.collection("users")
-                            .document(mAuth.getUid())
-                            .get()
-                            .addOnSuccessListener(documentSnapshot -> {
-                                try {
-                                    MainActivity.isParent = (boolean) documentSnapshot.get("isParent");
-                                    Log.d(TAG, "isParent: " + MainActivity.isParent);
-                                } catch (Exception e) {
-                                    System.out.println(e);
-                                }
-                            });
-                } else {
-                    mAuth.getCurrentUser().sendEmailVerification();
-                    Toast.makeText(LoginUser.this, "Check your email to verify your account!",
-                            Toast.LENGTH_LONG).show();
-                    mAuth.signOut();
-                    overridePendingTransition(0, 0);
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(getIntent());
-                }
+            if(task.isSuccessful()) {
+                // CHECK IF USER IS A PARENT
+                final boolean[] isParent = new boolean[1];
+                db.collection("deletedUsers")
+                        .document(mAuth.getUid())
+                        .get()
+                        .addOnSuccessListener(d -> {
+                            if(d.exists()){
+                                Log.d(TAG, "isParent21: " + d.get("isParent"));
+                                db.collection("deletedUsers").document(user1.getUid()).delete();
+                                user1.delete();
+                                overridePendingTransition(0, 0);
+                                finish();
+                                overridePendingTransition(0, 0);
+                                startActivity(getIntent());
+                                Toast.makeText(LoginUser.this, "Your parent has deleted your account", Toast.LENGTH_LONG).show();
+                            } else {
+                                db.collection("users").document(user1.getUid())
+                                        .get()
+                                        .addOnSuccessListener(documentSnapshot -> {
+                                            try {
+                                                isParent[0] = (boolean) documentSnapshot.get("isParent");
+                                                MainActivity.isParent = isParent[0];
+                                                Log.d(TAG, "isParent: " + MainActivity.isParent);
+                                                if (mAuth.getCurrentUser().isEmailVerified()) {
+                                                    startActivity(new Intent(LoginUser.this, Dashboard.class));
+
+                                                } else {
+                                                    mAuth.getCurrentUser().sendEmailVerification();
+                                                    Toast.makeText(LoginUser.this, "Check your email to verify your account!",
+                                                            Toast.LENGTH_LONG).show();
+                                                    mAuth.signOut();
+                                                    overridePendingTransition(0, 0);
+                                                    finish();
+                                                    overridePendingTransition(0, 0);
+                                                    startActivity(getIntent());
+                                                }
+                                            } catch (Exception e) {
+                                                System.out.println(e);
+                                            }
+                                        });
+                            }
+
+//                                db.collection("deletedUsers").document(mAuth.getUid()).delete();
+//                                FirebaseAuth.getInstance().getCurrentUser().delete();
+                        });
+//                db.collection("users").document(user1.getUid())
+//                        .get()
+//                        .addOnSuccessListener(documentSnapshot -> {
+//                            try {
+//                                isParent[0] = (boolean) documentSnapshot.get("isParent");
+//                                MainActivity.isParent = isParent[0];
+//                                Log.d(TAG, "isParent: " + MainActivity.isParent);
+//                                if (isParent[0]){
+//                                    if (mAuth.getCurrentUser().isEmailVerified()) {
+//                                        startActivity(new Intent(LoginUser.this, Dashboard.class));
+//
+//                                    } else {
+//                                        mAuth.getCurrentUser().sendEmailVerification();
+//                                        Toast.makeText(LoginUser.this, "Check your email to verify your account!",
+//                                                Toast.LENGTH_LONG).show();
+//                                        mAuth.signOut();
+//                                        overridePendingTransition(0, 0);
+//                                        finish();
+//                                        overridePendingTransition(0, 0);
+//                                        startActivity(getIntent());
+//                                    }
+//                                }
+//                            } catch (Exception e) {
+//                                System.out.println(e);
+//                        }
+//                    });
             }
             else
             {

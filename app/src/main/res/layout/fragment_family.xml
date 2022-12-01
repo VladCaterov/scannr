@@ -16,13 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:text="@string/scannr"-->
-<!--            android:textSize="48sp"-->
-<!--            android:textStyle="bold" />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,25 +37,27 @@
 
     <ListView
         android:id="@+id/childrenListView"
-        android:layout_width="410dp"
+        android:layout_width="match_parent"
         android:layout_height="363dp"
         app:layout_constraintBottom_toTopOf="@+id/addChildButtonLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.661" />
 
     <LinearLayout
         android:id="@+id/addChildButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:orientation="vertical"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
         <Button
-            android:layout_gravity="center"
             android:id="@+id/addChildButton"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
+            android:layout_gravity="center"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="5dp"
@@ -80,14 +75,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:strokeColor="@color/white"
             app:strokeWidth="1dp" />
-<!--        <Button-->
-<!--            android:id="@+id/addChildButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/register_child_user"-->
-<!--            android:layout_gravity="center"/>-->
     </LinearLayout>
-<!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--    android:id="@+id/buttonAddChild"-->
 <!--    android:layout_width="wrap_content"-->
 <!--    android:layout_height="wrap_content"-->
