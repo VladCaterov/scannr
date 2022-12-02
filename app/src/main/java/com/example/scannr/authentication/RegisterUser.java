@@ -40,6 +40,9 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
 
+
+
+
         FloatingActionButton flb = findViewById(R.id.backButtonRegister);
         flb.setOnClickListener(this);
 
@@ -51,6 +54,12 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         editDOB = findViewById(R.id.dobRegister);
         editEmail= findViewById(R.id.emailRegister);
         editPassword= findViewById(R.id.passwordRegister);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String email = extras.getString("email");
+            editEmail.setText(email);
+            //The key argument here must match that used in the other activity
+        }
 
         Button register = findViewById(R.id.registerButton);
         register.setOnClickListener(this);

@@ -97,5 +97,8 @@
     <string name="spending_limit">Spending Limit:</string>
     <string name="child">Child: </string>
     <string name="status">Status:</string>
+    <string name="create_child">Create Child</string>
+    <string name="reward_name">Reward Name</string>
+    <string name="expiration_date">Expiration Date</string>
 
 </resources>

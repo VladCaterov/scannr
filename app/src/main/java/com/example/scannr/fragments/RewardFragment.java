@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class RewardFragment extends Fragment {
                             String text = "Your Children Need Rewards. Please Create a Reward";
                             rewardsHeaderText.setText(text);
                             createRewardButton.setEnabled(true);
-                            createRewardButton.setOnClickListener(v -> Toast.makeText(getContext(), "CREATE REWARD", Toast.LENGTH_SHORT));
+                            createRewardButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), CreateRewardForm.class)));
                         }
 
                     } catch (Exception e){
@@ -97,15 +96,21 @@ public class RewardFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         for(DocumentSnapshot documentSnapshot : task.getResult()){
-                            String fName = documentSnapshot.getString("fName");
-                            String lName = documentSnapshot.getString("lName");
-                            String name = fName + " " + lName;
-                            childNameArrayList.add(name);
-                            statusArraysList.add(documentSnapshot.get("status").toString());
-                            rewardListAdapter.notifyDataSetChanged();
+                            try {
+                                String fName = documentSnapshot.getString("fName");
+                                String lName = documentSnapshot.getString("lName");
+                                String name = fName + " " + lName;
+                                childNameArrayList.add(name);
+                                statusArraysList.add(documentSnapshot.get("status").toString());
+                                rewardListAdapter.notifyDataSetChanged();
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
                         }
                     }
                 });
+
+
 
     }
 }

@@ -28,20 +28,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.login_button:
-                loginUserScreen();
-                break;
-
-            case R.id.register_button:
-                registerUserScreen();
-                break;
+        int viewID = v.getId();
+        if(viewID == R.id.login_button){
+            loginUserScreen();
+        }
+        else if (viewID == R.id.register_button){
+            registerUserScreen();
         }
     }
 
     private void registerUserScreen() {
         startActivity(new Intent(MainActivity.this, RegisterUser.class));
     }
+
     private void loginUserScreen() {
         startActivity(new Intent(MainActivity.this, LoginUser.class));
     }
