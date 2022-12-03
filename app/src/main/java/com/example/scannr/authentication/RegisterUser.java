@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -24,24 +26,23 @@ import android.widget.Button;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener{
-    private Validation validate = new Validation();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
+    private final Validation validate = new Validation();
     private EditText editFirstName, editMiddleInitial, editLastName,
         editPhoneNumber, editDOB, editEmail, editPassword;
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
-
-
-
 
         FloatingActionButton flb = findViewById(R.id.backButtonRegister);
         flb.setOnClickListener(this);
@@ -54,6 +55,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         editDOB = findViewById(R.id.dobRegister);
         editEmail= findViewById(R.id.emailRegister);
         editPassword= findViewById(R.id.passwordRegister);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String email = extras.getString("email");
@@ -61,7 +63,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             //The key argument here must match that used in the other activity
         }
 
-        Button register = findViewById(R.id.registerButton);
+        Button register = findViewById(R.id.registerButtonSubmit);
         register.setOnClickListener(this);
 
         Button login = findViewById(R.id.buttonLogin);
@@ -71,19 +73,18 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.backButtonRegister:
-                finish();
-                break;
-            case R.id.registerButton:
-                registerUser();
-                break;
-            case R.id.buttonLogin:
-                finish();
-                startActivity(new Intent(RegisterUser.this, LoginUser.class));
-                break;
-        }
+        int viewID = v.getId();
 
+        if (viewID == R.id.backButtonRegister){
+            finish();
+        }
+        else if (viewID == R.id.registerButtonSubmit){
+            registerUser();
+        }
+        else if (viewID == R.id.buttonLogin){
+            finish();
+            startActivity(new Intent(RegisterUser.this, LoginUser.class));
+        }
     }
     private void registerUser(){
         String fName = editFirstName.getText().toString().trim();
@@ -108,27 +109,6 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         user.put("numRewards", 0);
         user.put("isParent", true);
 
-
-        if (validate.isEmptyFirstName(fName)) {
-            editFirstName.setError("First Name is required!");
-            editFirstName.requestFocus();
-            return;
-        }
-        if (validate.isEmptyLastName(lName)) {
-            editLastName.setError("Last Name is required!");
-            editLastName.requestFocus();
-            return;
-        }
-        if (validate.isEmptyPhoneNumber(phoneNumber)) {
-            editPhoneNumber.setError("Phone Number is required!");
-            editPhoneNumber.requestFocus();
-            return;
-        }
-        if (validate.isEmptyDateOfBirth(dob)) {
-            editDOB.setError("Date of Birth is required!");
-            editDOB.requestFocus();
-            return;
-        }
         if (validate.isEmptyEmail(email)) {
             editEmail.setError("Email is required!");
             editEmail.requestFocus();
@@ -149,19 +129,38 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             editPassword.requestFocus();
             return;
         }
+        if (validate.isEmptyFirstName(fName)) {
+            editFirstName.setError("First Name is required!");
+            editFirstName.requestFocus();
+            return;
+        }
+        if (validate.isEmptyLastName(lName)) {
+            editLastName.setError("Last Name is required!");
+            editLastName.requestFocus();
+            return;
+        }
+        if (validate.isEmptyPhoneNumber(phoneNumber)) {
+            editPhoneNumber.setError("Phone Number is required!");
+            editPhoneNumber.requestFocus();
+            return;
+        }
+        if (validate.isEmptyDateOfBirth(dob)) {
+            editDOB.setError("Date of Birth is required!");
+            editDOB.requestFocus();
+            return;
+        }
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
                     if (task.isSuccessful()) {
                         // CREATE USER IN DATABASE FOR ADDITIONAL INFORMATION
                         FirebaseUser user1 = mAuth.getCurrentUser();
                         String displayName;
                         if (mInitial.length() == 0){
-                            displayName = fName + " " + lName;
+                            displayName = fName.toUpperCase() + " " + lName.toUpperCase();
                         }
                         else{
-                            displayName = fName + " " + mInitial + ". " + lName;
+                            displayName = fName.toUpperCase() + " " + mInitial + ". " + lName.toUpperCase();
                         }
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(displayName)
@@ -173,15 +172,17 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                 .set(user)
                                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
-
+                        finish();
                         startActivity(new Intent(RegisterUser.this, MainActivity.class));
-                        Toast.makeText(RegisterUser.this, "Registration Successful.",
+                        Toast.makeText(RegisterUser.this, "Parent Registration Successful.",
                                 Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
+                        editEmail.setText("");
+                        editPassword.setText("");
                         // If register fails, display a message to the user.
-                        Toast.makeText(RegisterUser.this, "Registration failed.",
+                        Toast.makeText(RegisterUser.this, "Registration failed. Account Already Exists",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

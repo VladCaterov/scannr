@@ -119,7 +119,7 @@
         android:inputType="phone"
         android:maxLength="14"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/registerButton"
+        app:layout_constraintBottom_toTopOf="@+id/registerButtonSubmit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
@@ -198,7 +198,7 @@
         app:rippleColor="@color/light_gray" />
 
     <Button
-        android:id="@+id/registerButton"
+        android:id="@+id/registerButtonSubmit"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="25dp"
@@ -221,7 +221,7 @@
 
     <EditText
         android:id="@+id/firstNameRegister"
-        android:layout_width="160dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="25dp"
@@ -232,6 +232,20 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/dobRegister"
         app:layout_constraintStart_toStartOf="parent" />
+    <EditText
+        android:id="@+id/middleInitialRegister"
+        android:layout_width="31dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:hint="@string/middle_initial_input"
+        android:inputType="text"
+        android:maxLength="1"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/firstNameRegister"
+        app:layout_constraintEnd_toStartOf="@+id/lastNameRegister"
+        app:layout_constraintStart_toEndOf="@+id/firstNameRegister"
+        app:layout_constraintTop_toTopOf="@+id/firstNameRegister" />
 
     <EditText
         android:id="@+id/lastNameRegister"
@@ -258,18 +272,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/or_separator" />
 
-    <EditText
-        android:id="@+id/middleInitialRegister"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:ems="10"
-        android:hint="@string/middle_initial_input"
-        android:inputType="text"
-        android:maxLength="1"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/firstNameRegister"
-        app:layout_constraintEnd_toStartOf="@+id/lastNameRegister"
-        app:layout_constraintStart_toEndOf="@+id/firstNameRegister"
-        app:layout_constraintTop_toTopOf="@+id/firstNameRegister" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
