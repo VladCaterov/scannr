@@ -77,8 +77,71 @@ public class CaptureFragment<textRecognizer> extends Fragment {
     // text recognizer
     private TextRecognizer textRecognizer;
 
+    // text recognizer options
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
+    private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
+
     public CaptureFragment() {
         // require a empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // initialize activity result launcher for gallery
+        galleryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Log.d(TAG, "onActivityResult: galleryActivityResultLauncher");
+                        // if image is selected
+                        if (result.getResultCode() == getActivity().RESULT_OK) {
+                            Intent data = result.getData();
+                            imageUri = data.getData();
+
+                            Log.d("CameraFragment", "onActivityResult: imageUri: " + imageUri);
+
+                            imageView.setImageURI(imageUri);
+                        } else {
+                            Log.d("CameraFragment", "onActivityResult: cancelled");
+                            // if image is not selected (cancelled)
+                            Toast.makeText(getActivity(), "Upload Cancelled", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+
+        // initialize activity result launcher for camera
+        cameraActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Log.d(TAG, "onActivityResult: cameraActivityResultLauncher");
+                        // if image is captured from camera
+                        if (result.getResultCode() == getActivity().RESULT_OK) {
+                            Log.d("CameraFragment", "onActivityResult: imageUri: " + imageUri);
+
+                            imageView.setImageURI(imageUri);
+                        } else {
+                            Log.d("CameraFragment", "onActivityResult: cancelled");
+                            // if image is not captured (cancelled)
+                            Toast.makeText(getActivity(), "Capture Cancelled", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // close the text recognizer
+        imageView = null;
+        imageUri = null;
     }
 
     @Override
@@ -100,6 +163,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+        // Initialize Progress Dialog
         pd = new ProgressDialog(getActivity());
         pd.setTitle("Loading...");
         pd.setCanceledOnTouchOutside(false);
@@ -115,6 +179,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
             }
         });
 
+        // Set onClickListeners
         convertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,86 +190,6 @@ public class CaptureFragment<textRecognizer> extends Fragment {
                 }
             }
         });
-    }
-
-    private void sortContents(String text) { // TODO: move to PHM
-        String[] cache = new String[3];
-        Arrays.fill(cache, "");
-//        cache[1] = "2022.11.29"; // TODO: REMOVE
-//        cache[2] = "2.09"; // TODO: REMOVE
-        ArrayList<Float> moneyList = new ArrayList<>();
-
-        StringTokenizer st = new StringTokenizer(text.trim());
-        while (st.hasMoreTokens()) { // We need 3 things: Business name (0), Date (1), Receipt Total (2)
-            String currToken = st.nextToken();
-            if (currToken.contains("University") || currToken.contains("BON") || currToken.contains("Walmart")) { // Business name
-                cache[0] = currToken;
-            } else if (currToken.contains("/") || currToken.contains("-") && (currToken.matches(".*/.*/.*") || currToken.matches(".*-.*-.*"))) { // Date
-                cache[1] = currToken;
-            } else if ((currToken.contains("$") || currToken.contains(".")) && currToken.replaceAll("[^\\d.]", "").matches("[-+]?[0-9]*\\.?[0-9]+")) { // Receipt Total (with $)
-                moneyList.add(Float.parseFloat(currToken.replaceAll("[^\\d.]", "")));
-            }
-//            else if (currToken.contains(".")) {// (with .)
-//                // TODO: Handle decimals
-//            }
-        }
-
-        if (moneyList.size() > 0) {
-            //traverse moneyList and find the biggest value and put it in cache[3]
-            float max = 0;
-            int index = 0;
-            for (int i = 0; i < moneyList.size(); i++) {
-                if (moneyList.get(i) > max) {
-                    max = moneyList.get(i);
-                    index = i;
-                }
-            }
-
-            //set cache[3] to the biggest value
-            cache[2] = moneyList.get(index).toString() ;
-        }
-
-        // alert dialog builder to show business name, date, and total
-        final EditText bNameOutputField = new EditText(getActivity());
-        final EditText dateField = new EditText(getActivity());
-        final EditText totalField = new EditText(getActivity());
-        bNameOutputField.setText(cache[0]);
-        dateField.setText(cache[1]);
-        totalField.setText(cache[2]);
-
-        // add hints
-        bNameOutputField.setHint("Business Name");
-        dateField.setHint("Date");
-        totalField.setHint("Receipt Total");
-
-        LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.addView(bNameOutputField);
-        linearLayout.addView(dateField);
-        linearLayout.addView(totalField);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Receipt Information");
-//        builder.setMessage("Business Name: " + cache[0] + "\nDate: " + cache[1] + "\nTotal: " + cache[2]);
-        builder.setView(linearLayout);
-        builder.setPositiveButton("Save", (dialog, id) -> {
-            cache[0] = bNameOutputField.getText().toString();
-            cache[1] = dateField.getText().toString();
-            cache[2] = totalField.getText().toString();
-
-            // add to PHM
-            try {
-                PurchaseHistoryManager.addReceipt(cache[0], cache[1], Float.parseFloat(cache[2]));
-                Toast.makeText(getActivity(), "Receipt added successfully", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Log.e(TAG, "addReceipt: Error adding document" + e);
-                Toast.makeText(getActivity(), "Error adding receipt", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setCancelable(true);
-        builder.setNegativeButton("Cancel",
-                (dialog, id) -> dialog.cancel());
-        builder.create().show();
     }
 
     private void recognizeTextFromImage() {
@@ -225,7 +210,7 @@ public class CaptureFragment<textRecognizer> extends Fragment {
                             String recognizedText = text.getText();
 
                             // TODO: IMAGE OUTPUT
-                            sortContents(recognizedText);
+                            PurchaseHistoryManager.sortContents(recognizedText, getActivity());
                             Log.d(TAG, "onSuccess: recognizedText" + recognizedText);
                         }
                     })
@@ -290,29 +275,6 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         galleryActivityResultLauncher.launch(intent);
     }
 
-    private ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    Log.d(TAG, "onActivityResult: galleryActivityResultLauncher");
-                    // if image is selected
-                    if (result.getResultCode() == getActivity().RESULT_OK) {
-                        Intent data = result.getData();
-                        imageUri = data.getData();
-
-                        Log.d("CameraFragment", "onActivityResult: imageUri: " + imageUri);
-
-                        imageView.setImageURI(imageUri);
-                    } else {
-                        Log.d("CameraFragment", "onActivityResult: cancelled");
-                        // if image is not selected (cancelled)
-                        Toast.makeText(getActivity(), "Upload Cancelled", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
-
     private void pickImageCamera() {
         Log.d("CameraFragment", "pickImageCamera: ");
 
@@ -325,27 +287,8 @@ public class CaptureFragment<textRecognizer> extends Fragment {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         cameraActivityResultLauncher.launch(intent);
+
     }
-
-    private ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    Log.d(TAG, "onActivityResult: cameraActivityResultLauncher");
-                    // if image is captured from camera
-                    if (result.getResultCode() == getActivity().RESULT_OK) {
-                        Log.d("CameraFragment", "onActivityResult: imageUri: " + imageUri);
-
-                        imageView.setImageURI(imageUri);
-                    } else {
-                        Log.d("CameraFragment", "onActivityResult: cancelled");
-                        // if image is not captured (cancelled)
-                        Toast.makeText(getActivity(), "Capture Cancelled", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
 
     boolean checkStoragePermissions() {
         Log.d(TAG, "checkStoragePermissions: ");
