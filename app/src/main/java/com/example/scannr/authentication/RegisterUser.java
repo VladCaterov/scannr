@@ -156,12 +156,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                         // CREATE USER IN DATABASE FOR ADDITIONAL INFORMATION
                         FirebaseUser user1 = mAuth.getCurrentUser();
                         String displayName;
-                        if (mInitial.length() == 0){
-                            displayName = fName.toUpperCase() + " " + lName.toUpperCase();
-                        }
-                        else{
-                            displayName = fName.toUpperCase() + " " + mInitial + ". " + lName.toUpperCase();
-                        }
+                        displayName = fName.toUpperCase() + " " + lName.toUpperCase();
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(displayName)
                                 .build();

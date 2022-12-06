@@ -11,12 +11,14 @@
             app:summary="Loading..."
             app:title="Edit Name"
             app:useSimpleSummaryProvider="false" />
-        <EditTextPreference
+        <Preference
+            app:dialogLayout="@null"
             app:key="editPhone"
             app:summary="Loading..."
             app:title="Edit Phone Number"
             app:useSimpleSummaryProvider="false" />
-        <EditTextPreference
+        <Preference
+            app:dialogLayout="@null"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:key="editBirthday"
@@ -31,7 +33,8 @@
         app:key="login_title"
         app:title="Login Credentials">
 
-        <EditTextPreference
+        <Preference
+            app:dialogLayout="@null"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:key="editEmail"

@@ -1,57 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:orientation="vertical">
+    android:layout_margin="10dp">
 
     <TextView
+        android:id="@+id/editNameDialogText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:width="250dp"
-        android:text="Edit Name"
+        android:text="@string/edit_name"
         android:textColor="@color/primary"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/editFNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/first_name_label"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/fName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fName"
+        app:layout_constraintVertical_bias="0.5" />
 
     <EditText
         android:id="@+id/fName"
-        android:layout_width="match_parent"
+        android:layout_width="161dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="First Name"
+        android:hint="@string/first_name"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/mInitial"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editNameDialogText"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/editMInitialLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/middle_initial_label"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/editLNameLabel"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editFNameLabel" />
 
     <EditText
         android:id="@+id/mInitial"
-        android:layout_width="match_parent"
+        android:layout_width="161dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="Middle Initial"
+        android:hint="@string/middle_initial"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:maxLength="1"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@id/lName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fName" />
+
+    <TextView
+        android:id="@+id/editLNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/last_name_label"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/lName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lName"
+        app:layout_constraintVertical_bias="0.5" />
 
     <EditText
         android:id="@+id/lName"
-        android:layout_width="match_parent"
+        android:layout_width="161dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="Last Name"
+        android:hint="@string/last_name"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
 
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mInitial"
+        app:layout_constraintVertical_bias="0.5" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:width="250dp"-->
+<!--        android:text="@string/edit_name"-->
+<!--        android:textColor="@color/primary"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold" />-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginLeft="4dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginRight="4dp"-->
+<!--        android:layout_marginBottom="4dp">-->
+
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/fName"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/first_name"-->
+<!--            android:inputType="text"-->
+<!--            android:minHeight="48dp" />-->
+<!--    </LinearLayout>-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/mInitial"-->
+<!--        android:maxLength="1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:layout_marginLeft="4dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginRight="4dp"-->
+<!--        android:layout_marginBottom="4dp"-->
+<!--        android:hint="@string/middle_initial"-->
+<!--        android:inputType="text"-->
+<!--        android:minHeight="48dp" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/lName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:layout_marginLeft="4dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginRight="4dp"-->
+<!--        android:layout_marginBottom="4dp"-->
+<!--        android:hint="@string/last_name"-->
+<!--        android:inputType="text"-->
+<!--        android:minHeight="48dp" />-->
+

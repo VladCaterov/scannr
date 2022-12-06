@@ -6,12 +6,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,16 +21,17 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.example.scannr.MainActivity;
 import com.example.scannr.R;
 import com.example.scannr.authentication.Validation;
-import com.example.scannr.dashboard.Dashboard;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
@@ -54,12 +57,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         super.onViewCreated(view, savedInstanceState);
 
         // get preference components
-        Preference editName = (Preference) findPreference("editName");
-        EditTextPreference editPhone = (EditTextPreference) findPreference("editPhone");
-        EditTextPreference editBirthday = (EditTextPreference) findPreference("editBirthday");
+        Preference editName = findPreference("editName");
+        Preference editPhone = findPreference("editPhone");
+        Preference editBirthday = findPreference("editBirthday");
         EditTextPreference editEmail = (EditTextPreference) findPreference("editEmail");
-        Preference editPassword = (Preference) findPreference("editPassword");
-        Preference sessionLogout = (Preference) findPreference("sessionLogout");
+        Preference editPassword = findPreference("editPassword");
+        Preference sessionLogout = findPreference("sessionLogout");
 
 
         db.collection("users")
@@ -67,11 +70,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     try {
-                        // add default values to preferences
+                        // ADD DEFAULT VALUES TO PREFERENCES
                         if (editName != null) {
-                            editName.setSummary(((String) documentSnapshot.get("fName") + " " +
-                                    (String) documentSnapshot.get("mInitial") + " " +
-                                    (String) documentSnapshot.get("lName")).trim().replaceAll(" +", " "));
+                            if (Objects.equals(documentSnapshot.get("mInitial"), "")){
+                                editName.setSummary((documentSnapshot.get("fName") + " " +
+                                        documentSnapshot.get("lName")));
+                            } else {
+                                editName.setSummary((documentSnapshot.get("fName") + " " +
+                                        documentSnapshot.get("mInitial") + ". " +
+                                        documentSnapshot.get("lName")));
+                            }
                         }
                         if (editPhone != null) {
                             editPhone.setSummary((String) documentSnapshot.get("phoneNumber"));
@@ -90,47 +98,179 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                 });
 
-        // update phone number in firebase
-        if (editPhone != null) {
-            editPhone.setOnPreferenceChangeListener((preference, newValue) -> {
-                if (validate.isEmptyPhoneNumber(newValue.toString())) {
-                    return false;
-                }
+        // UPDATE USER NAME check to see if name preference is clicked, and open dialogue
+        if (editName != null) {
+            editName.setOnPreferenceClickListener(preference -> {
 
-                db.collection("users")
-                        .document(mAuth.getUid())
-                        .update("phoneNumber", newValue.toString());
-                updateSummary(preference, newValue.toString());
+                // open custom dialog_edit_name
+                ViewGroup viewGroup = view.findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_name, viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                builder.setPositiveButton("SAVE", (dialog, id) -> {
+                    // update fName, mInitial, and lName in firebase if value exists
+                    String fName = ((EditText) dialogView.findViewById(R.id.fName)).getText().toString();
+                    String mInitial = ((EditText) dialogView.findViewById(R.id.mInitial)).getText().toString();
+                    String lName = ((EditText) dialogView.findViewById(R.id.lName)).getText().toString();
+
+                    if (validate.isEmptyFirstName(fName)) {
+                        Toast.makeText(getActivity(), "New First Name Must Not Be Empty",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    if (validate.isEmptyLastName(lName)) {
+                        Toast.makeText(getActivity(), "New Last Name Must Not Be Empty",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        try {
+                            DocumentReference userDocument = db.collection("users").document(mAuth.getUid());
+
+                            userDocument.update("fName", fName);
+                            getActivity().getIntent().putExtra("fName", fName);
+                            userDocument.update("mInitial", mInitial);
+                            getActivity().getIntent().putExtra("mInitial", mInitial);
+                            userDocument.update("lName", lName);
+                            getActivity().getIntent().putExtra("lName", lName);
+
+                            String displayName = fName.toUpperCase() + " " + lName.toUpperCase();
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(displayName)
+                                    .build();
+
+                            assert mAuth.getCurrentUser() != null;
+                            mAuth.getCurrentUser().updateProfile(profileUpdates);
+                            // update summary
+                            if (validate.isEmptyMiddleInitial(mInitial)){
+                                updateSummary(preference, (fName + " " + lName));
+                            } else {
+                                updateSummary(preference, (fName + " " + mInitial + ". " + lName));
+                            }
+                            Toast.makeText(getActivity(), "Name Changed Successfully",
+                                    Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                    }
+
+                });
+                builder.setNegativeButton("Cancel",
+                        (dialog, id) -> dialog.cancel());
+                builder.setView(dialogView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
                 return true;
             });
         }
 
+        // UPDATE PHONE NUMBER IN FIREBASE
+        if (editPhone != null) {
+            editPhone.setOnPreferenceClickListener(preference -> {
+                // open custom dialog_edit_name
+                ViewGroup viewGroup = view.findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_phone, viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                EditText editPhoneNumber = dialogView.findViewById(R.id.phoneEdit);
+                editPhoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+                builder.setPositiveButton("SAVE", (dialog, id) -> {
+                    String phoneNumber = editPhoneNumber.getText().toString();
+                    if (validate.isEmptyPhoneNumber(phoneNumber)){
+                        Toast.makeText(getActivity(), "New Phone Number Must Not Be Empty",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    } if (!validate.validatePhoneNumber(phoneNumber)){
+                        Toast.makeText(getActivity(), "New Phone Number Must Be Valid",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        try {
+                            DocumentReference userDocument = db.collection("users").document(mAuth.getUid());
+                            userDocument.update("phoneNumber", phoneNumber);
+                            updateSummary(preference, phoneNumber);
+                            Toast.makeText(getActivity(), "Phone Number Changed Successfully",
+                                    Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
+                builder.setView(dialogView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            });
+        }
         // update birthday in firebase
         if (editBirthday != null) {
-            editBirthday.setOnPreferenceChangeListener((preference, newValue) -> {
-                if (validate.isEmptyDateOfBirth(newValue.toString())) {
-                    return false;
-                }
-
-                db.collection("users")
-                        .document(mAuth.getUid())
-                        .update("dob", newValue.toString());
-                updateSummary(preference, newValue.toString());
+            editBirthday.setOnPreferenceClickListener(preference -> {
+                ViewGroup viewGroup = view.findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_birthday, viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                EditText editBirthday1 = dialogView.findViewById(R.id.birthdayEdit);
+                builder.setPositiveButton("SAVE", (dialog, id) -> {
+                    String eb = editBirthday1.getText().toString();
+                    if (validate.isEmptyDateOfBirth(eb)){
+                        Toast.makeText(getActivity(), "New Birthday Must Not Be Empty",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        try {
+                            DocumentReference userDocument = db.collection("users").document(mAuth.getUid());
+                            userDocument.update("dob", eb);
+                            updateSummary(preference, eb);
+                            Toast.makeText(getActivity(), "Birthday Changed Successfully",
+                                    Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
+                builder.setView(dialogView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
                 return true;
             });
         }
 
         // update email in firebase
         if (editEmail != null) {
-            editEmail.setOnPreferenceChangeListener((preference, newValue) -> {
-                if (validate.isEmptyEmail(newValue.toString()) || !validate.validateEmail(newValue.toString())) {
-                    return false;
-                }
+            editEmail.setOnPreferenceClickListener(preference -> {
+                ViewGroup viewGroup = view.findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_email, viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                EditText newEmail = dialogView.findViewById(R.id.emailNewEdit);
+                EditText currentEmail = dialogView.findViewById(R.id.emailCurrentEdit);
+                EditText currentPassword = dialogView.findViewById(R.id.passwordCurrentEdit);
+                builder.setPositiveButton("SAVE", (dialog, id) -> {
+                    String newEmailText = newEmail.getText().toString();
+                    String currentEmailText = currentEmail.getText().toString();
+                    String currentPasswordText = currentPassword.getText().toString();
 
-                db.collection("users")
-                        .document(mAuth.getUid())
-                        .update("email", newValue.toString());
-                updateSummary(preference, newValue.toString());
+                    if (validate.isEmptyEmail(newEmailText)){
+                        Toast.makeText(getActivity(), "New Email Must Not Be Empty",
+                                Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                    if (!validate.validateEmail(newEmailText)){
+                        Toast.makeText(getActivity(), "New Email Must Be Valid",
+                                Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    } else {
+                        try {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            assert user != null;
+                            updateUserEmail(preference, user, currentEmailText, currentPasswordText, newEmailText);
+
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
+                builder.setView(dialogView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
                 return true;
             });
         }
@@ -151,7 +291,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setCancelable(true);
-                builder.setPositiveButton("OK", (dialog, id) -> {
+                builder.setPositiveButton("SAVE", (dialog, id) -> {
                     // update fName, mInitial, and lName in firebase if value exists
                     String currentPassword = ((EditText) dialogView.findViewById(R.id.currentPassword)).getText().toString();
                     String newPassword = ((EditText) dialogView.findViewById(R.id.newPassword)).getText().toString();
@@ -189,55 +329,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
 
 
-        // check to see if name preference is clicked, and open dialogue
-        if (editName != null) {
-            editName.setOnPreferenceClickListener(preference -> {
 
-                // open custom dialog_edit_name
-                ViewGroup viewGroup = view.findViewById(android.R.id.content);
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_name, viewGroup, false);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setCancelable(true);
-                builder.setPositiveButton("OK", (dialog, id) -> {
-                    // update fName, mInitial, and lName in firebase if value exists
-                    String fName = ((EditText) dialogView.findViewById(R.id.fName)).getText().toString();
-                    String mInitial = ((EditText) dialogView.findViewById(R.id.mInitial)).getText().toString();
-                    String lName = ((EditText) dialogView.findViewById(R.id.lName)).getText().toString();
-
-                    try {
-                        if (!fName.isEmpty()) {
-                            db.collection("users")
-                                    .document(mAuth.getUid())
-                                    .update("fName", fName);
-                        }
-                        if (!mInitial.isEmpty()) { mInitial = ""; }
-
-                        db.collection("users")
-                                .document(mAuth.getUid())
-                                .update("mInitial", mInitial);
-
-                        if (!lName.isEmpty()) {
-                            db.collection("users")
-                                    .document(mAuth.getUid())
-                                    .update("lName", lName);
-                        }
-
-                        // update summary
-                        updateSummary(preference, (fName + " " + mInitial + " " + lName).trim().replaceAll(" +", " "));
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
-                });
-                builder.setNegativeButton("Cancel",
-                        (dialog, id) -> dialog.cancel());
-                builder.setView(dialogView);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
-                return true;
-            });
-        }
 
         // signout if session logout button is clicked
         if (sessionLogout != null) {
@@ -247,7 +339,39 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             });
         }
     }
+    private void updateUserEmail(Preference preference, FirebaseUser user, String currentEmail, String currentPassword, String newEmail) {
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(currentEmail, currentPassword);
 
+        // Prompt the user to re-provide their sign-in credentials
+        user.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            user.updateEmail(newEmail).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    DocumentReference userDocument = db.collection("users").document(mAuth.getUid());
+                                    userDocument.update("email", newEmail);
+
+                                    updateSummary(preference, newEmail);
+                                    Toast.makeText(getActivity(), "Email Changed Successfully",
+                                            Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "Email updated");
+                                } else {
+                                    Toast.makeText(getActivity(), "Unable to change Email",
+                                            Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "Error Email not updated");
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getActivity(), "Unable to authenticate",
+                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Error auth failed");
+                        }
+                    }
+                });
+    }
 
     private void updateUserPassword(FirebaseUser user, String email, String currentPassword, String newPassword) {
         AuthCredential credential = EmailAuthProvider
@@ -283,17 +407,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void logout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         LayoutInflater inflater = this.getLayoutInflater();
-        // Add the buttons
         builder.setView(inflater.inflate(R.layout.dialog_logout, null))
                 .setPositiveButton(R.string.ok, (dialog, id) -> {
                     // Sign Out
                     mAuth.signOut();
                     requireActivity().finish();
-//                    requireActivity().overridePendingTransition(0, 0);
                 })
-                .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                    dialog.cancel();
-                });
+                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
 
         AlertDialog dialog = builder.create();
         dialog.show();

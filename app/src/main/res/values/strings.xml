@@ -100,5 +100,27 @@
     <string name="create_child">Create Child</string>
     <string name="reward_name">Reward Name</string>
     <string name="expiration_date">Expiration Date</string>
+    <string name="edit_name">Edit Name</string>
+    <string name="first_name">First Name</string>
+    <string name="middle_initial">Middle Initial</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name_label">First Name:</string>
+    <string name="middle_initial_label">Middle Initial:</string>
+    <string name="last_name_label">Last Name:</string>
+    <string name="edit_phone">Edit Phone</string>
+    <string name="phone_number_label">Phone Number:</string>
+    <string name="edit_password">Edit Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="edit_birthday">Edit Birthday</string>
+    <string name="birthday_label">Birthday:</string>
+    <string name="birthday">Birthday</string>
+    <string name="email_label">Email:</string>
+    <string name="edit_email">Edit Email</string>
+    <string name="new_email_label">New Email:</string>
+    <string name="new_email">New Email</string>
+    <string name="current_email">Current Email</string>
+    <string name="current_email_label">Current Email:</string>
+    <string name="current_password_label">Current Password:</string>
 
 </resources>

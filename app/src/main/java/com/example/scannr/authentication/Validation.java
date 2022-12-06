@@ -2,6 +2,8 @@ package com.example.scannr.authentication;
 
 import android.util.Patterns;
 
+import java.util.regex.Pattern;
+
 public class Validation {
 
     public boolean validateEmail(String email){
@@ -19,9 +21,11 @@ public class Validation {
     }
 
     public boolean isEmptyFirstName(String fName) { return fName.isEmpty(); }
+    public boolean isEmptyMiddleInitial(String mInitial) { return mInitial.isEmpty(); }
     public boolean isEmptyLastName(String lName) { return lName.isEmpty(); }
+
     public boolean validatePhoneNumber(String phoneNumber){
-        return Patterns.PHONE.matcher(phoneNumber).matches();
+        return phoneNumber.length() == 14;
     }
     public boolean isEmptyPhoneNumber(String phoneNumber) { return phoneNumber.isEmpty(); }
     public boolean isEmptyDateOfBirth(String dateOfBirth) { return dateOfBirth.isEmpty(); }
