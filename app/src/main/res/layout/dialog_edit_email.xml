@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:layout_margin="20dp"
+    android:animateLayoutChanges="true">
 
     <TextView
         android:id="@+id/editEmailDialogText"
@@ -18,80 +20,90 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/editNewEmailLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/new_email_label"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/emailNewEdit"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailNewEdit"
-        app:layout_constraintVertical_bias="0.5" />
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
 
-    <EditText
-        android:id="@+id/emailNewEdit"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/new_email"
-        android:inputType="textEmailAddress"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/emailCurrentEdit"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editEmailDialogText"
-        app:layout_constraintVertical_bias="0.5" />
+        <TextView
+            android:id="@+id/editNewEmailLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/new_email_label"
+            android:textSize="18dp" />
 
-    <TextView
-        android:id="@+id/editCurrentEmailLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/current_email_label"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/emailCurrentEdit"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailCurrentEdit"
-        app:layout_constraintVertical_bias="0.5" />
+        <EditText
+            android:id="@+id/emailNewEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/new_email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:textSize="18dp" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/emailCurrentEdit"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/current_email"
-        android:inputType="textEmailAddress"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/passwordCurrentEdit"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailNewEdit"
-        app:layout_constraintVertical_bias="0.5" />
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/editEmailDialogText">
 
-    <TextView
-        android:id="@+id/editCurrentPasswordLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/current_password_label"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/passwordCurrentEdit"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordCurrentEdit"
-        app:layout_constraintVertical_bias="0.5" />
+        <TextView
+            android:id="@+id/editCurrentEmailLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/current_email_label"
+            android:textSize="18dp" />
 
-    <EditText
-        android:id="@+id/passwordCurrentEdit"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/current_password"
-        android:inputType="textPassword"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailCurrentEdit"
-        app:layout_constraintVertical_bias="0.5" />
+        <EditText
+            android:id="@+id/emailCurrentEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/current_email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+
+        <TextView
+            android:id="@+id/editCurrentPasswordLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/current_password_label"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/passwordCurrentEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/current_password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:textSize="18dp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

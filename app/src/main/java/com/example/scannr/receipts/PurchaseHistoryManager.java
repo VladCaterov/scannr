@@ -87,58 +87,7 @@ public class PurchaseHistoryManager {
             cache[2] = moneyList.get(index).toString() ;
         }
 
-//        // alert dialog builder to show business name, date, and total
-//        final EditText bNameOutputField = new EditText(activity);
-//        final EditText dateField = new EditText(activity);
-//        final EditText totalField = new EditText(activity);
-//        bNameOutputField.setText(cache[0]);
-//        dateField.setText(cache[1]);
-//        totalField.setText(cache[2]);
-//
-//        // add hints
-//        bNameOutputField.setHint("Business Name");
-//        dateField.setHint("Date");
-//        totalField.setHint("Receipt Total");
-//
-//        LinearLayout linearLayout = new LinearLayout(activity);
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//        linearLayout.addView(bNameOutputField);
-//        linearLayout.addView(dateField);
-//        linearLayout.addView(totalField);
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-//        builder.setTitle("Receipt Information");
-////        builder.setMessage("Business Name: " + cache[0] + "\nDate: " + cache[1] + "\nTotal: " + cache[2]);
-//        builder.setView(linearLayout);
-//        builder.setPositiveButton("Save", (dialog, id) -> {
-//            cache[0] = bNameOutputField.getText().toString();
-//            cache[1] = dateField.getText().toString();
-//            cache[2] = totalField.getText().toString();
-//
-//            // add to PHM
-//            try {
-//                addReceipt(cache[0], cache[1], Float.parseFloat(cache[2]));
-//                Toast.makeText(activity, "Receipt added successfully", Toast.LENGTH_SHORT).show();
-//            } catch (Exception e) {
-//                Log.e(TAG, "addReceipt: Error adding document" + e);
-//                Toast.makeText(activity, "Error adding receipt", Toast.LENGTH_SHORT).show();
-//            }
-//
-            promptReceipt(activity, cache[0], cache[1], cache[2]);
-//        });
-//        builder.setCancelable(true);
-//        builder.setNegativeButton("Cancel",
-//                (dialog, id) -> dialog.cancel());
-//        builder.create().show();
-//
-//        // open receipt dialog
-//
-//
-//        builder.setNegativeButton("Cancel",
-//                (dialog, id) -> dialog.cancel());
-//        builder.setView(dialogView);
-//        AlertDialog alertDialog = builder.create();
-//        alertDialog.show();
+        promptReceipt(activity, cache[0], cache[1], cache[2]);
     }
 
     // use dialog_receipt_add

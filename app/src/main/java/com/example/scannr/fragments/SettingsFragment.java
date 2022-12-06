@@ -107,11 +107,30 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_name, viewGroup, false);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
+                EditText fNameField = dialogView.findViewById(R.id.fName);
+                EditText mInitialField = dialogView.findViewById(R.id.mInitial);
+                EditText lNameField = dialogView.findViewById(R.id.lName);
+
+                // set default values
+                db.collection("users")
+                        .document(Objects.requireNonNull(mAuth.getUid()))
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            try {
+                                fNameField.setText((String) documentSnapshot.get("fName"));
+                                mInitialField.setText((String) documentSnapshot.get("mInitial"));
+                                lNameField.setText((String) documentSnapshot.get("lName"));
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
+                        });
+
                 builder.setPositiveButton("SAVE", (dialog, id) -> {
                     // update fName, mInitial, and lName in firebase if value exists
-                    String fName = ((EditText) dialogView.findViewById(R.id.fName)).getText().toString();
-                    String mInitial = ((EditText) dialogView.findViewById(R.id.mInitial)).getText().toString();
-                    String lName = ((EditText) dialogView.findViewById(R.id.lName)).getText().toString();
+                    String fName = fNameField.getText().toString();
+                    String mInitial = mInitialField.getText().toString();
+                    String lName = lNameField.getText().toString();
+
 
                     if (validate.isEmptyFirstName(fName)) {
                         Toast.makeText(getActivity(), "New First Name Must Not Be Empty",

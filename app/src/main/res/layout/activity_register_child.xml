@@ -2,19 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="10dp"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/backButtonFamilyManagerCreateChild"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|top"
-        android:contentDescription="@string/backButton"
-        android:src="@drawable/back_arrow_icon"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/primary"/>
+        android:backgroundTint="@color/primary"
+        android:contentDescription="@string/backButton"
+        android:src="@drawable/back_arrow_icon" />
 
     <TextView
         android:id="@+id/scannr"
@@ -23,7 +25,7 @@
         android:layout_gravity="center"
         android:text="@string/scannr"
         android:textSize="48sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/scannr_register"
@@ -38,8 +40,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/firstNameRegisterChild"
@@ -50,6 +52,7 @@
             android:hint="@string/first_name_input"
             android:inputType="text"
             android:textSize="24sp" />
+
         <EditText
             android:id="@+id/lastNameRegisterChild"
             android:layout_width="wrap_content"
@@ -66,58 +69,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
-        android:textSize="24sp"
-        android:layout_marginTop="24dp"/>
+        android:textSize="24sp" />
+
     <EditText
         android:id="@+id/passwordRegisterChild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:textSize="24sp"
-        android:layout_marginTop="24dp"/>
+        android:textSize="24sp" />
+
     <EditText
         android:id="@+id/bankRoutingNumberRegisterChild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/BankRoutingNumber"
         android:inputType="number"
         android:maxLength="9"
-        android:textSize="24sp"
-        android:layout_marginTop="24dp"/>
+        android:textSize="24sp" />
+
     <EditText
         android:id="@+id/bankAccountNumberRegisterChild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/BankAccountNumber"
         android:inputType="number"
         android:maxLength="12"
-        android:textSize="24sp"
-        android:layout_marginTop="24dp"/>
+        android:textSize="24sp" />
+
     <EditText
         android:id="@+id/spendingLimitRegisterChild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/SpendingLimit"
         android:inputType="number"
-        android:textSize="24sp"
-        android:layout_marginTop="24dp"/>
+        android:textSize="24sp" />
+
     <Button
         android:id="@+id/registerChildButton"
         android:layout_width="177dp"
         android:layout_height="63dp"
         android:layout_gravity="center"
         android:layout_marginTop="24dp"
-        android:text="@string/registerChild"/>
+        android:text="@string/registerChild" />
 </LinearLayout>

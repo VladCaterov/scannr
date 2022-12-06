@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    android:animateLayoutChanges="true">
 
     <TextView
         android:id="@+id/editNameDialogText"
@@ -18,80 +20,94 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/editFNameLabel"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/first_name_label"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/fName"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fName"
-        app:layout_constraintVertical_bias="0.5" />
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editNameDialogText">
 
-    <EditText
-        android:id="@+id/fName"
-        android:layout_width="161dp"
+        <TextView
+            android:id="@+id/editFNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/first_name_label"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/fName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/first_name"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/first_name"
-        android:inputType="text"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/mInitial"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editNameDialogText"
-        app:layout_constraintVertical_bias="0.5" />
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
-    <TextView
-        android:id="@+id/editMInitialLabel"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/editMInitialLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/middle_initial_label"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/mInitial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/middle_initial"
+            android:inputType="text"
+            android:maxLength="1"
+            android:minHeight="48dp"
+            android:textSize="18dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/middle_initial_label"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/editLNameLabel"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editFNameLabel" />
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-    <EditText
-        android:id="@+id/mInitial"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/middle_initial"
-        android:inputType="text"
-        android:maxLength="1"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@id/lName"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fName" />
+        <TextView
+            android:id="@+id/editLNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/last_name_label"
+            android:textSize="18dp" />
 
-    <TextView
-        android:id="@+id/editLNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/last_name_label"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/lName"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lName"
-        app:layout_constraintVertical_bias="0.5" />
+        <EditText
+            android:id="@+id/lName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/last_name"
+            android:inputType="text"
 
-    <EditText
-        android:id="@+id/lName"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/last_name"
-        android:inputType="text"
-        android:minHeight="48dp"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mInitial"
-        app:layout_constraintVertical_bias="0.5" />
+            android:minHeight="48dp"
+            android:textSize="18dp" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
