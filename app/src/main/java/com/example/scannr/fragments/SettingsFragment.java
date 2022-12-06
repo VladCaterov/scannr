@@ -60,7 +60,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference editName = findPreference("editName");
         Preference editPhone = findPreference("editPhone");
         Preference editBirthday = findPreference("editBirthday");
-        EditTextPreference editEmail = (EditTextPreference) findPreference("editEmail");
+        Preference editEmail =  findPreference("editEmail");
         Preference editPassword = findPreference("editPassword");
         Preference sessionLogout = findPreference("sessionLogout");
 
@@ -260,8 +260,38 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         try {
                             FirebaseUser user = mAuth.getCurrentUser();
                             assert user != null;
-                            updateUserEmail(preference, user, currentEmailText, currentPasswordText, newEmailText);
 
+                            AuthCredential credential = EmailAuthProvider
+                                    .getCredential(currentEmailText, currentPasswordText);
+
+                            // Prompt the user to re-provide their sign-in credentials
+                            user.reauthenticate(credential)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                user.updateEmail(newEmailText).addOnCompleteListener(task1 -> {
+                                                    if (task1.isSuccessful()) {
+                                                        DocumentReference userDocument = db.collection("users").document(mAuth.getUid());
+                                                        userDocument.update("email", newEmail);
+
+                                                        updateSummary(preference, newEmailText);
+                                                        Toast.makeText(getActivity(), "Email Changed Successfully",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        Log.d(TAG, "Email updated");
+                                                    } else {
+                                                        Toast.makeText(getActivity(), "Unable to change Email",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        Log.d(TAG, "Error Email not updated");
+                                                    }
+                                                });
+                                            } else {
+                                                Toast.makeText(getActivity(), "Unable to authenticate",
+                                                        Toast.LENGTH_SHORT).show();
+                                                Log.d(TAG, "Error auth failed");
+                                            }
+                                        }
+                                    });
                         } catch (Exception e) {
                             System.out.println(e);
                         }
@@ -338,39 +368,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             });
         }
-    }
-    private void updateUserEmail(Preference preference, FirebaseUser user, String currentEmail, String currentPassword, String newEmail) {
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(currentEmail, currentPassword);
-
-        // Prompt the user to re-provide their sign-in credentials
-        user.reauthenticate(credential)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            user.updateEmail(newEmail).addOnCompleteListener(task1 -> {
-                                if (task1.isSuccessful()) {
-                                    DocumentReference userDocument = db.collection("users").document(mAuth.getUid());
-                                    userDocument.update("email", newEmail);
-
-                                    updateSummary(preference, newEmail);
-                                    Toast.makeText(getActivity(), "Email Changed Successfully",
-                                            Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "Email updated");
-                                } else {
-                                    Toast.makeText(getActivity(), "Unable to change Email",
-                                            Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "Error Email not updated");
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getActivity(), "Unable to authenticate",
-                                    Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "Error auth failed");
-                        }
-                    }
-                });
     }
 
     private void updateUserPassword(FirebaseUser user, String email, String currentPassword, String newPassword) {
