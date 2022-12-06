@@ -123,9 +123,19 @@
 
     <Button
         android:id="@+id/registerChildButton"
-        android:layout_width="177dp"
-        android:layout_height="63dp"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
         android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:text="@string/registerChild" />
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/primary"
+        android:elevation="0dp"
+        android:hapticFeedbackEnabled="false"
+        android:stateListAnimator="@null"
+        android:text="@string/register_child_user"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:theme="@style/Theme.Scannr.Button.BorderWhite"
+        />
 </LinearLayout>

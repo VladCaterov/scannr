@@ -174,7 +174,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                                     Intent dashboardIntent = new Intent(LoginUser.this, Dashboard.class);
                                     dashboardIntent.putExtra("fName", Objects.requireNonNull(documentSnapshot.get("fName")).toString());
                                     dashboardIntent.putExtra("lName", Objects.requireNonNull(documentSnapshot.get("lName")).toString());
-                                    dashboardIntent.putExtra("mInitial", Objects.requireNonNull(documentSnapshot.get("mInitial")).toString());
 
                                     dashboardIntent.putExtra("userID", user.getUid());
                                     dashboardIntent.putExtra("displayName", user.getDisplayName());

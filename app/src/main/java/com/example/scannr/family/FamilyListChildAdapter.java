@@ -163,10 +163,10 @@ public class FamilyListChildAdapter extends ArrayAdapter<String> {
                         docRefChild.update("accountNumber", editBankAccountNumber.getText().toString());
                         docRefChild.update("spendingLimit", editSpendingLimit.getText().toString());
 
-                        Toast.makeText(context, "DEMO UPDATE USER SUCCESSFULLY", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "UPDATE USER SUCCESSFULLY", Toast.LENGTH_LONG).show();
                     }
                     else {
-                        Toast.makeText(context, "DEMO FAILED TO UPDATE USER", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "FAILED TO UPDATE USER", Toast.LENGTH_LONG).show();
                     }
 
                 })
