@@ -1,6 +1,7 @@
 package com.example.scannr.dashboard;
 
 import android.app.AlertDialog;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.example.scannr.MainActivity;
@@ -30,6 +31,7 @@ public class Dashboard extends AppCompatActivity implements NavigationBarView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_dashboard);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
