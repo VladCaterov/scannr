@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.scannr.R;
 
@@ -52,4 +53,5 @@ public class ReceiptAdapter extends ArrayAdapter<String> {
 
         return convertView;
     }
+
 }

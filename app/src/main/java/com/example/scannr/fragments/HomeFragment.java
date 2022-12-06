@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 
 import com.example.scannr.R;
+import com.example.scannr.receipts.PurchaseHistoryManager;
 import com.example.scannr.receipts.ReceiptAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,5 +78,22 @@ public class HomeFragment extends ListFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // if receipt item is clicked
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        db.collection("receipts")
+                .whereEqualTo("userId", mAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    String businessName = task.getResult().getDocuments().get(position).get("businessName").toString();
+                    String date = task.getResult().getDocuments().get(position).get("date").toString();
+                    String amount = task.getResult().getDocuments().get(position).get("receiptTotal").toString();
+                    String receiptId = task.getResult().getDocuments().get(position).getId();
+                    PurchaseHistoryManager.editReceipt(getActivity(), businessName, date, amount, receiptId);
+                });
     }
 }
