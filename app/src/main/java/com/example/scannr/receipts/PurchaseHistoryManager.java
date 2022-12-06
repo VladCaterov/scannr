@@ -52,7 +52,7 @@ public class PurchaseHistoryManager {
                 });
     }
 
-    public static void sortContents(String text, FragmentActivity activity) { // TODO: move to PHM
+    public static void sortContents(String text, FragmentActivity activity) {
         String[] cache = new String[3]; // stores business name, date, and total
         Arrays.fill(cache, ""); // fill with empty strings (to replace)
         ArrayList<Float> moneyList = new ArrayList<>(); // stores all money value candidates
@@ -156,6 +156,71 @@ public class PurchaseHistoryManager {
                 Toast.makeText(activity, "Error adding receipt", Toast.LENGTH_SHORT).show();
             }
         });
+
+        builder.setNegativeButton("Cancel",
+                (dialog, id) -> dialog.cancel());
+        builder.setView(dialogView);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    // use dialog_receipt_add
+    public static void editReceipt(FragmentActivity activity, String bName, String date, String total, String docID) {
+        ViewGroup view = activity.findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_receipt_add, view, false);
+
+        // set default values
+        EditText bNameField = dialogView.findViewById(R.id.receiptBusinessName);
+        EditText dateField = dialogView.findViewById(R.id.receiptDate);
+        EditText totalField = dialogView.findViewById(R.id.receiptTotalAmount);
+
+        bNameField.setText(bName);
+        dateField.setText(date);
+        totalField.setText(total);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setCancelable(true);
+
+        builder.setPositiveButton("EDIT", (dialog, id) -> {
+            // update fName, mInitial, and lName in firebase if value exists
+            String businessName = bNameField.getText().toString();
+            String receiptDate = dateField.getText().toString();
+            String receiptTotal = totalField.getText().toString();
+
+            // guard and make sure input is required
+            if (businessName.isEmpty() || receiptDate.isEmpty() || receiptTotal.isEmpty()) {
+                Toast.makeText(activity, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // add to PHM
+            try {
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                // update receipt into firebase database using docid
+                db.collection("receipts").document(docID)
+                        .update("businessName", bNameField.getText().toString(),
+                                "date", dateField.getText().toString(),
+                                "receiptTotal", df.format(Float.parseFloat(totalField.getText().toString())))
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                            Toast.makeText(activity, "Receipt updated successfully", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.w(TAG, "Error updating document", e);
+                            Toast.makeText(activity, "Error updating receipt", Toast.LENGTH_SHORT).show();
+                        });
+
+                Toast.makeText(activity, "Receipt edited successfully", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Log.e(TAG, "addReceipt: Error adding document" + e);
+                Toast.makeText(activity, "Error editing receipt", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //detect if user clicked on item
+        //if yes, then set the text to the item's text
+
 
         builder.setNegativeButton("Cancel",
                 (dialog, id) -> dialog.cancel());
