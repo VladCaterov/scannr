@@ -189,6 +189,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_phone, viewGroup, false);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 EditText editPhoneNumber = dialogView.findViewById(R.id.phoneEdit);
+
+                // set default values
+                db.collection("users")
+                        .document(Objects.requireNonNull(mAuth.getUid()))
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            try {
+                                editPhoneNumber.setText((String) documentSnapshot.get("phoneNumber"));
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
+                        });
+
                 editPhoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
                 builder.setPositiveButton("SAVE", (dialog, id) -> {
                     String phoneNumber = editPhoneNumber.getText().toString();
@@ -226,6 +239,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_birthday, viewGroup, false);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 EditText editBirthday1 = dialogView.findViewById(R.id.birthdayEdit);
+
+                // set default values
+                db.collection("users")
+                        .document(Objects.requireNonNull(mAuth.getUid()))
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            try {
+                                editBirthday1.setText((String) documentSnapshot.get("dob"));
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
+                        });
+
                 builder.setPositiveButton("SAVE", (dialog, id) -> {
                     String eb = editBirthday1.getText().toString();
                     if (validate.isEmptyDateOfBirth(eb)){
@@ -261,6 +287,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 EditText newEmail = dialogView.findViewById(R.id.emailNewEdit);
                 EditText currentEmail = dialogView.findViewById(R.id.emailCurrentEdit);
                 EditText currentPassword = dialogView.findViewById(R.id.passwordCurrentEdit);
+
+                // set default values
+                db.collection("users")
+                        .document(Objects.requireNonNull(mAuth.getUid()))
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            try {
+                                currentEmail.setText((String) documentSnapshot.get("email"));
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
+                        });
+
                 builder.setPositiveButton("SAVE", (dialog, id) -> {
                     String newEmailText = newEmail.getText().toString();
                     String currentEmailText = currentEmail.getText().toString();
