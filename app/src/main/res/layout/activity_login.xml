@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:orientation="vertical"
     android:background="@color/primaryDark">
 
     <ImageView
@@ -115,6 +116,7 @@
         android:layout_gravity="center"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
+        android:layout_marginBottom="10dp"
         android:autofillHints="emailAddress"
         android:ems="10"
         android:hint="@string/email"

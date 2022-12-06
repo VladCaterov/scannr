@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:hint="@string/birthday"
-            android:inputType="date"
+            android:inputType="text"
             android:minHeight="48dp"
             android:textSize="18dp" />
     </LinearLayout>

@@ -57,20 +57,49 @@ public class PurchaseHistoryManager {
         Arrays.fill(cache, ""); // fill with empty strings (to replace)
         ArrayList<Float> moneyList = new ArrayList<>(); // stores all money value candidates
 
-        StringTokenizer st = new StringTokenizer(text.trim());
+        StringTokenizer st = new StringTokenizer(text.trim(), System.lineSeparator());
+        int countIncrement = 0; // used for businessName
+        String biggestName = "";
+
         while (st.hasMoreTokens()) { // We need 3 things: Business name (0), Date (1), Receipt Total (2)
             String currToken = st.nextToken();
-            if (currToken.contains("University") || currToken.contains("BON") || currToken.contains("Walmart")) { // Business name
-                cache[0] = currToken;
-            } else if (currToken.contains("/") || currToken.contains("-") && (currToken.matches(".*/.*/.*") || currToken.matches(".*-.*-.*"))) { // Date
+
+            System.out.println("currToken: " + currToken);
+
+            int digits = 0;
+            int characters = 0;
+            for (int i = 0; i < currToken.length(); i++) {
+                if (currToken.charAt(i) >= 48 && currToken.charAt(i) <= 57) {
+                    digits++;
+                } else {
+                    characters++;
+                }
+            }
+
+            if (countIncrement < 7 && !(currToken.contains("/") || currToken.contains(":") || currToken.contains("#") || currToken.contains(".")) &&
+                    !(currToken == "Total" || currToken == "Tip" || currToken.contains("BLVD") || currToken.contains("feedback") || currToken.matches("^[0-9]{5}(?:-[0-9]{4})?$") || currToken.matches("d{1,3}.?\\d{0,3}\\s[a-zA-Z]{2,30}\\s[a-zA-Z]{2,15}") || currToken.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")) && (characters > digits)) { // Business name
+
+                if (currToken.length() > biggestName.length()) {
+                    biggestName = currToken;
+                }
+            }
+
+            countIncrement++;
+        }
+
+        st = new StringTokenizer(text.trim());
+
+        while (st.hasMoreTokens()) { // We need: Date (1), Receipt Total (2)
+            String currToken = st.nextToken();
+
+            if ((currToken.contains("/") || currToken.contains("-") || currToken.contains("http")) && (currToken.matches(".*/.*/.*") || currToken.matches(".*-.*-.*"))) { // Date
                 cache[1] = currToken;
             } else if ((currToken.contains("$") || currToken.contains(".")) && currToken.replaceAll("[^\\d.]", "").matches("[-+]?[0-9]*\\.?[0-9]+")) { // Receipt Total (with $)
                 moneyList.add(Float.parseFloat(currToken.replaceAll("[^\\d.]", "")));
             }
-//            else if (currToken.contains(".")) {// (with .)
-//                // TODO: Handle decimals
-//            }
         }
+
+        cache[0] = biggestName;
 
         if (moneyList.size() > 0) {
             //traverse moneyList and find the biggest value and put it in cache[3]

@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:hint="University of Texas"
+            android:hint="Business"
             android:minHeight="48dp"
             android:textSize="14sp" />
     </LinearLayout>
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:hint="12/25/2022"
+            android:hint="MM/DD/YYYY"
             android:minHeight="48dp"
             android:textSize="14sp" />
     </LinearLayout>
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:hint="12.34"
+            android:hint="XX.XX"
             android:minHeight="48dp"
             android:textSize="14sp" />
     </LinearLayout>
